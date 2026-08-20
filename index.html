@@ -12,13 +12,13 @@
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--blue:#0066cc;--ink:#1d1d1f}
+:root{--blue:#0066cc}
 html{-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",sans-serif;color:#1d1d1f;background:#f5f5f7;line-height:1.5;letter-spacing:-0.2px;-webkit-font-smoothing:antialiased}
 .wrap{max-width:480px;margin:0 auto;background:#fff;min-height:100vh}
 .hd{display:flex;align-items:center;height:56px;padding:0 20px;border-bottom:1px solid rgba(0,0,0,.06);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(10px);z-index:20}
 .hd img{height:26px;width:auto;display:block}
-.hero{padding:34px 20px 26px;text-align:center}
+.hero{padding:34px 20px 22px;text-align:center}
 .badge{display:inline-block;font-size:13px;font-weight:600;color:var(--blue);background:rgba(0,102,204,.08);padding:6px 13px;border-radius:100px;margin-bottom:16px}
 .hero h1{font-size:29px;line-height:1.28;font-weight:800;letter-spacing:-0.6px}
 .hero p{margin-top:12px;color:#555;font-size:15px}
@@ -27,10 +27,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 .stat .k{font-size:12px;color:#888}
 .stat .v{font-size:22px;font-weight:800;color:var(--blue);margin-top:3px;letter-spacing:-0.5px}
 .disc{font-size:11px;color:#aaa;margin-top:10px}
-.card{margin:8px 16px 20px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;box-shadow:0 6px 24px rgba(0,0,0,.05);overflow:hidden}
+.card{margin:8px 16px 22px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:20px;box-shadow:0 6px 24px rgba(0,0,0,.05);overflow:hidden}
 .prog{height:5px;background:#eef0f3}
-.prog i{display:block;height:100%;background:var(--blue);width:33%;transition:width .35s cubic-bezier(.25,.1,.25,1)}
-.cbody{padding:22px 20px 24px}
+.prog i{display:block;height:100%;background:var(--blue);width:33%;transition:width .4s cubic-bezier(.25,.1,.25,1)}
+.est{padding:16px 20px 2px;animation:fade .3s ease}
+.est-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.est-lab{font-size:13px;color:#666;font-weight:600}
+.est-pct{font-size:26px;font-weight:800;color:var(--blue);letter-spacing:-1px}
+.est-pct #estNum{font-variant-numeric:tabular-nums}
+.est-track{height:12px;background:#eef0f3;border-radius:100px;overflow:hidden}
+.est-fill{height:100%;width:0;background:linear-gradient(90deg,#4aa3ff,#0066cc);border-radius:100px;transition:width .85s cubic-bezier(.25,.1,.25,1)}
+.cbody{padding:20px 20px 26px;min-height:260px}
 .step-no{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.3px}
 .q{font-size:20px;font-weight:800;margin:6px 0 3px;letter-spacing:-0.4px;line-height:1.35}
 .qn{font-size:13px;color:#888;margin-bottom:16px}
@@ -42,6 +49,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 .chip.sel .bx{background:var(--blue);border-color:var(--blue)}
 .chip .bx svg{opacity:0;width:14px;height:14px}
 .chip.sel .bx svg{opacity:1}
+/* result graph */
+.result{text-align:center;padding:14px 4px 4px;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.result .lab{font-size:14px;color:#666;font-weight:600}
+.result .pct{font-size:56px;font-weight:800;color:var(--blue);letter-spacing:-2px;margin:2px 0;line-height:1.05}
+.result .pct small{font-size:22px;font-weight:700;margin-left:2px}
+.rtrack{height:16px;background:#eef0f3;border-radius:100px;overflow:hidden;margin:16px 4px 0}
+.rfill{height:100%;width:0;background:linear-gradient(90deg,#4aa3ff,#0066cc);border-radius:100px;transition:width 1s cubic-bezier(.25,.1,.25,1)}
+.rscale{display:flex;justify-content:space-between;font-size:11px;color:#bbb;margin:5px 6px 0}
+.rnote{font-size:12px;color:#999;margin-top:16px;line-height:1.5}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:7px}
 .field input{width:100%;font-size:16px;font-family:inherit;padding:15px 16px;border:1px solid rgba(0,0,0,.15);border-radius:12px;background:#fafafa;color:#1d1d1f;outline:none;transition:border .12s}
@@ -50,7 +67,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 .agree input{width:18px;height:18px;margin-top:1px;accent-color:var(--blue);flex-shrink:0}
 .agree a{color:var(--blue);text-decoration:underline;cursor:pointer}
 .privacy{font-size:12px;color:#777;background:#f7f8fa;border-radius:10px;padding:12px 14px;margin-bottom:14px;max-height:120px;overflow:auto;line-height:1.6}
-.btn{width:100%;border:none;border-radius:13px;background:var(--blue);color:#fff;font-size:17px;font-weight:700;font-family:inherit;padding:17px;cursor:pointer;letter-spacing:-0.3px;transition:opacity .12s}
+.hilite{background:linear-gradient(90deg,rgba(0,102,204,.08),rgba(0,102,204,.03));border:1px solid rgba(0,102,204,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:14px;color:#0055aa;font-weight:600;text-align:center}
+.hilite b{font-size:18px;font-weight:800}
+.btn{width:100%;border:none;border-radius:13px;background:var(--blue);color:#fff;font-size:17px;font-weight:700;font-family:inherit;padding:17px;cursor:pointer;letter-spacing:-0.3px;transition:opacity .12s;margin-top:6px}
 .btn:active{opacity:.85}
 .err{color:#d33;font-size:13px;margin-bottom:10px;text-align:center}
 .back{background:none;border:none;color:#999;font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:12px;padding:0}
@@ -59,17 +78,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 .done .ic{width:64px;height:64px;border-radius:50%;background:rgba(0,102,204,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .done h2{font-size:22px;font-weight:800}
 .done p{color:#666;font-size:15px;margin-top:8px}
-.sec{padding:28px 20px;border-top:8px solid #f0f1f3}
-.sec h3{font-size:18px;font-weight:800;text-align:center;letter-spacing:-0.4px}
-.sec .sub{text-align:center;color:#999;font-size:13px;margin-top:6px}
-.ba{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:20px}
-.ba .col{text-align:center;flex:1;max-width:130px}
-.ba .box{border-radius:14px;padding:18px 8px}
-.ba .before{background:#f0f1f3}.ba .after{background:var(--blue);color:#fff}
-.ba .lab{font-size:12px;opacity:.75}.ba .amt{font-size:22px;font-weight:800;margin-top:4px;letter-spacing:-0.5px}
-.ba .arrow{font-size:24px;color:#ccc}
-.tag{text-align:center;margin-top:16px;font-size:14px;font-weight:700;color:var(--blue)}
-.ft{padding:26px 20px 40px;background:#fafafa;border-top:1px solid rgba(0,0,0,.06);font-size:12px;color:#999;line-height:1.7}
+.live{margin:0 16px 22px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.04)}
+.live-hd{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#333;padding:13px 16px;border-bottom:1px solid rgba(0,0,0,.06)}
+.live-hd .tag{font-size:10px;font-weight:800;color:#fff;background:#e53935;padding:2px 6px;border-radius:5px;letter-spacing:.5px}
+.live-hd .dot{width:7px;height:7px;border-radius:50%;background:#e53935;animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,57,53,.5)}70%{box-shadow:0 0 0 7px rgba(229,57,53,0)}100%{box-shadow:0 0 0 0 rgba(229,57,53,0)}}
+.live-view{height:159px;overflow:hidden}
+.live-track{will-change:transform}
+.live-row{display:flex;align-items:center;height:53px;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.04);font-size:13px;box-sizing:border-box}
+.live-row .lr-d{color:#aaa;width:36px;flex-shrink:0;font-size:12px}
+.live-row .lr-n{font-weight:700;color:#333;width:48px;flex-shrink:0}
+.live-row .lr-a{color:#555;flex:1;text-align:center;font-size:12px}
+.live-row .lr-r{color:var(--blue);font-weight:600;font-size:12px;text-align:right;flex-shrink:0;width:110px}
+.live-count{text-align:center;font-size:13px;color:#666;padding:12px;background:#fafbfc}
+.live-count b{color:var(--blue);font-weight:800}
+.trust{padding:20px;text-align:center;font-size:13px;color:#888;border-top:8px solid #f0f1f3}
+.ft{padding:24px 20px 40px;background:#fafafa;border-top:1px solid rgba(0,0,0,.06);font-size:12px;color:#999;line-height:1.7}
 .ft b{color:#666;font-weight:700}
 </style>
 </head>
@@ -90,19 +114,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 
   <div class="card" id="formcard">
     <div class="prog"><i id="bar"></i></div>
+    <div class="est" id="est" style="display:none">
+      <div class="est-top"><span class="est-lab">예상 원금 감면율</span><span class="est-pct"><span id="estNum">0</span>%</span></div>
+      <div class="est-track"><div class="est-fill" id="estFill"></div></div>
+    </div>
     <div class="cbody" id="cbody"></div>
   </div>
 
-  <div class="sec">
-    <h3>채무조정 전과 후</h3>
-    <div class="sub">채무 1억원 기준, 실제 조정 사례 평균</div>
-    <div class="ba">
-      <div class="col"><div class="box before"><div class="lab">조정 전</div><div class="amt">1억원</div></div></div>
-      <div class="arrow">→</div>
-      <div class="col"><div class="box after"><div class="lab">조정 후</div><div class="amt">300만원</div></div></div>
-    </div>
-    <div class="tag">원금 97% 탕감 + 이자 전액 면제</div>
+  <div class="live">
+    <div class="live-hd"><span class="tag">LIVE</span><span class="dot"></span>실시간 탕감신청 현황</div>
+    <div class="live-view"><div class="live-track" id="liveTrack"></div></div>
+    <div class="live-count">오늘 <b id="liveCount">188</b>명이 무료진단을 신청했습니다</div>
   </div>
+
+  <div class="trust">비대면·비밀보장 · <b style="color:#666">법무법인 율평</b> 변호사 직접 상담</div>
 
   <div class="ft">
     <b>법무법인 율평</b> | 대표변호사 김용일<br>
@@ -132,37 +157,56 @@ function sendEntry(entry){
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
 setTimeout(retryPending,2000);
 
-var QUESTIONS=[
-  {id:'debt',no:'STEP 1 / 3',title:'현재 부담 중인 채무금액은?',note:'대략적인 금액을 선택해주세요.',options:['1천~3천만원','3천~5천만원','5천만원~1억원','1억원 이상']},
-  {id:'income',no:'STEP 2 / 3',title:'월평균 급여는 어느 정도인가요?',note:'조정 가능액 계산에 사용됩니다.',options:['150만원 미만','150~300만원','300~500만원','500만원 이상']}
-];
-var state={step:0,answers:{},name:'',phone:'',agreed:false,submitted:false};
+// 감면율 추정 (안내용 · 실제 확정 아님)
+var DEBT=[{v:'1천~3천만원',p:75},{v:'3천~5천만원',p:83},{v:'5천만원~1억원',p:90},{v:'1억원 이상',p:96}];
+var INCOME=[{v:'150만원 미만',a:2},{v:'150~300만원',a:0},{v:'300~500만원',a:-3},{v:'500만원 이상',a:-6}];
+function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+function debtPct(v){var f=DEBT.filter(function(d){return d.v===v;})[0];return f?f.p:80;}
+function finalPct(dv,iv){var b=debtPct(dv);var i=INCOME.filter(function(x){return x.v===iv;})[0];return clamp(b+(i?i.a:0),72,97);}
+
+var state={screen:'q_debt',answers:{},name:'',phone:'',agreed:false,submitted:false};
 var CHECK='<svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var body=document.getElementById('cbody'),bar=document.getElementById('bar');
-function setBar(){bar.style.width=((state.step+1)/3*100)+'%';}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function setBar(){var w=state.screen==='q_debt'||state.screen==='r_debt'?33:(state.screen==='q_income'||state.screen==='r_income'?66:100);bar.style.width=w+'%';}
 
-function renderQuestion(q){
+function chips(list){
+  return '<div class="opts">'+list.map(function(o){
+    return '<button class="chip" data-v="'+esc(o.v)+'"><span class="bx">'+CHECK+'</span>'+esc(o.v)+'</button>';
+  }).join('')+'</div>';
+}
+function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip'),function(b){b.onclick=function(){cb(b.getAttribute('data-v'));};});}
+
+var estEl=document.getElementById('est');
+function countUp(id,target){
+  var el=document.getElementById(id);if(!el)return;var from=parseInt(el.textContent,10)||0;var start=null,dur=850;
+  function tick(t){if(!start)start=t;var p=Math.min((t-start)/dur,1);var e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(target-from)*e);if(p<1)requestAnimationFrame(tick);}
+  if(window.requestAnimationFrame)requestAnimationFrame(tick);else el.textContent=target;
+}
+function estShow(on){if(estEl)estEl.style.display=on?'block':'none';}
+function estAnim(pct){estShow(true);countUp('estNum',pct);var f=document.getElementById('estFill');if(f)setTimeout(function(){f.style.width=pct+'%';},50);}
+function estInstant(pct){estShow(true);var n=document.getElementById('estNum');if(n)n.textContent=pct;var f=document.getElementById('estFill');if(f)f.style.width=pct+'%';}
+
+function renderDebtQ(){
+  setBar();estShow(false);
+  body.innerHTML='<div class="step-no">STEP 1 / 3</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">선택하면 예상 감면율을 계산해드려요.</div>'+chips(DEBT);
+  bindChips(function(v){state.answers.debt=v;estAnim(debtPct(v));setTimeout(function(){if(state.screen==='q_debt'){state.screen='q_income';route();}},1400);});
+}
+function renderIncomeQ(){
   setBar();
-  var opts=q.options.map(function(lbl){
-    var sel=state.answers[q.id]===lbl;
-    return '<button class="chip'+(sel?' sel':'')+'" data-v="'+esc(lbl)+'"><span class="bx">'+CHECK+'</span>'+esc(lbl)+'</button>';
-  }).join('');
-  body.innerHTML=(state.step>0?'<button class="back" id="back">← 이전</button>':'')+
-    '<div class="step-no">'+q.no+'</div><div class="q">'+q.title+'</div><div class="qn">'+q.note+'</div>'+
-    '<div class="opts">'+opts+'</div>';
-  Array.prototype.forEach.call(body.querySelectorAll('.chip'),function(b){
-    b.onclick=function(){state.answers[q.id]=b.getAttribute('data-v');next();};
-  });
-  var bk=document.getElementById('back');if(bk)bk.onclick=prev;
+  if(state.answers.debt)estInstant(state.answers.income?finalPct(state.answers.debt,state.answers.income):debtPct(state.answers.debt));
+  body.innerHTML='<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME);
+  bindChips(function(v){state.answers.income=v;estAnim(finalPct(state.answers.debt,v));setTimeout(function(){if(state.screen==='q_income'){state.screen='contact';route();}},1400);});
+  document.getElementById('back').onclick=function(){state.screen='q_debt';route();};
 }
 
 function renderContact(){
-  setBar();
+  setBar();estShow(false);
+  var fp=finalPct(state.answers.debt,state.answers.income);
   body.innerHTML=
     '<button class="back" id="back">← 이전</button>'+
-    '<div class="step-no">STEP 3 / 3</div><div class="q">탕감액을 받아보실<br>연락처를 남겨주세요</div>'+
-    '<div class="qn">진단 결과를 문자/전화로 안내드립니다.</div>'+
+    '<div class="step-no">STEP 3 / 3</div>'+
+    '<div class="hilite">회원님 예상 감면율 <b>'+fp+'%</b><br>지금 연락처만 남기면 정확한 진단을 받아요</div>'+
     '<div id="err" class="err hidden"></div>'+
     '<div class="field"><label>이름</label><input id="name" type="text" placeholder="홍길동" autocomplete="name" value="'+esc(state.name)+'"></div>'+
     '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"></div>'+
@@ -174,12 +218,11 @@ function renderContact(){
   ph.oninput=function(){var d=ph.value.replace(/\D/g,'').slice(0,11);var p=d.length>7?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):d.length>3?d.slice(0,3)+'-'+d.slice(3):d;state.phone=p;ph.value=p;};
   ag.onchange=function(){state.agreed=ag.checked;};
   document.getElementById('pv').onclick=function(){document.getElementById('privacy').classList.toggle('hidden');};
-  document.getElementById('back').onclick=prev;
+  document.getElementById('back').onclick=function(){state.screen='q_income';route();};
   document.getElementById('submit').onclick=submit;
 }
 
 function showErr(m){var e=document.getElementById('err');if(e){e.textContent=m;e.classList.remove('hidden');}}
-
 function submit(){
   if(!state.answers.debt||!state.answers.income)return showErr('채무금액과 월평균 급여를 선택해주세요.');
   if(!state.name.trim()||!state.phone.trim())return showErr('이름과 연락처를 입력해주세요.');
@@ -191,7 +234,6 @@ function submit(){
   sendEntry(entry);
   state.submitted=true;renderDone();
 }
-
 function renderDone(){
   bar.style.width='100%';
   body.innerHTML='<div class="done"><div class="ic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none"><path d="M5 13l4 4L19 7" stroke="#0066cc" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
@@ -199,14 +241,37 @@ function renderDone(){
   try{var fc=document.getElementById('formcard');if(fc&&fc.scrollIntoView)fc.scrollIntoView({behavior:'smooth',block:'center'});}catch(x){}
 }
 
-function next(){state.step++;route();}
-function prev(){if(state.step>0)state.step--;route();}
 function route(){
   if(state.submitted)return renderDone();
-  if(state.step<2)renderQuestion(QUESTIONS[state.step]);
-  else renderContact();
+  switch(state.screen){
+    case 'q_debt':return renderDebtQ();
+    case 'q_income':return renderIncomeQ();
+    case 'contact':return renderContact();
+    default:return renderDebtQ();
+  }
 }
 route();
+
+// ===== 실시간 신청자 피드 =====
+(function(){
+  var ROWS=[
+    ['이*영','4,500만원','원금 85% 탕감 예상'],['박*호','1억 2,000만원','원금 97% 탕감 예상'],
+    ['최*진','2,800만원','이자 전액 면제 예상'],['정*아','6,300만원','원금 90% 탕감 예상'],
+    ['한*민','3,900만원','원금 88% 탕감 예상'],['오*석','7,100만원','원금 94% 탕감 예상'],
+    ['강*희','5,600만원','원금 91% 탕감 예상'],['윤*철','9,400만원','원금 95% 탕감 예상'],
+    ['장*미','3,200만원','원금 82% 탕감 예상'],['임*범','1억 5,000만원','원금 96% 탕감 예상'],
+    ['서*연','2,100만원','이자 전액 면제 예상'],['신*우','5,900만원','원금 89% 탕감 예상']
+  ];
+  var track=document.getElementById('liveTrack');if(!track)return;
+  var off=0,ROWH=53;
+  function fmtDate(back){var d=new Date(Date.now()-back*86400000);return ('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2);}
+  function render(){var h='';for(var i=0;i<5;i++){var r=ROWS[(off+i)%ROWS.length];h+='<div class="live-row"><span class="lr-d">'+fmtDate(i>=4?1:0)+'</span><span class="lr-n">'+r[0]+'</span><span class="lr-a">'+r[1]+'</span><span class="lr-r">'+r[2]+'</span></div>';}track.innerHTML=h;}
+  render();
+  setInterval(function(){
+    track.style.transition='transform .55s cubic-bezier(.25,.1,.25,1)';track.style.transform='translateY(-'+ROWH+'px)';
+    setTimeout(function(){off=(off+1)%ROWS.length;track.style.transition='none';track.style.transform='translateY(0)';render();var c=document.getElementById('liveCount');if(c)c.textContent=parseInt(c.textContent,10)+1;},560);
+  },2000);
+})();
 </script>
 </body>
 </html>
