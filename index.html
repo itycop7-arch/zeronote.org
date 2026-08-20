@@ -38,6 +38,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretend
 .est-track{height:12px;background:#eef0f3;border-radius:100px;overflow:hidden}
 .est-fill{height:100%;width:0;background:linear-gradient(90deg,#4aa3ff,#0066cc);border-radius:100px;transition:width .85s cubic-bezier(.25,.1,.25,1)}
 .cbody{padding:20px 20px 26px;min-height:260px}
+.screen{animation:fade .34s ease}
 .step-no{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.3px}
 .q{font-size:20px;font-weight:800;margin:6px 0 3px;letter-spacing:-0.4px;line-height:1.35}
 .qn{font-size:13px;color:#888;margin-bottom:16px}
@@ -178,6 +179,7 @@ function chips(list){
 function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip'),function(b){b.onclick=function(){cb(b.getAttribute('data-v'));};});}
 
 var estEl=document.getElementById('est');
+function paint(html){body.innerHTML='<div class="screen">'+html+'</div>';}
 function countUp(id,target){
   var el=document.getElementById(id);if(!el)return;var from=parseInt(el.textContent,10)||0;var start=null,dur=850;
   function tick(t){if(!start)start=t;var p=Math.min((t-start)/dur,1);var e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(target-from)*e);if(p<1)requestAnimationFrame(tick);}
@@ -189,13 +191,13 @@ function estInstant(pct){estShow(true);var n=document.getElementById('estNum');i
 
 function renderDebtQ(){
   setBar();estShow(false);
-  body.innerHTML='<div class="step-no">STEP 1 / 3</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">선택하면 예상 감면율을 계산해드려요.</div>'+chips(DEBT);
+  paint('<div class="step-no">STEP 1 / 3</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">선택하면 예상 감면율을 계산해드려요.</div>'+chips(DEBT));
   bindChips(function(v){state.answers.debt=v;estAnim(debtPct(v));setTimeout(function(){if(state.screen==='q_debt'){state.screen='q_income';route();}},1400);});
 }
 function renderIncomeQ(){
   setBar();
   if(state.answers.debt)estInstant(state.answers.income?finalPct(state.answers.debt,state.answers.income):debtPct(state.answers.debt));
-  body.innerHTML='<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME);
+  paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));
   bindChips(function(v){state.answers.income=v;estAnim(finalPct(state.answers.debt,v));setTimeout(function(){if(state.screen==='q_income'){state.screen='contact';route();}},1400);});
   document.getElementById('back').onclick=function(){state.screen='q_debt';route();};
 }
@@ -203,7 +205,7 @@ function renderIncomeQ(){
 function renderContact(){
   setBar();estShow(false);
   var fp=finalPct(state.answers.debt,state.answers.income);
-  body.innerHTML=
+  paint(
     '<button class="back" id="back">← 이전</button>'+
     '<div class="step-no">STEP 3 / 3</div>'+
     '<div class="hilite">회원님 예상 감면율 <b>'+fp+'%</b><br>지금 연락처만 남기면 정확한 진단을 받아요</div>'+
@@ -212,7 +214,7 @@ function renderContact(){
     '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"></div>'+
     '<label class="agree"><input type="checkbox" id="agree"'+(state.agreed?' checked':'')+'><span>개인정보 수집 및 이용에 동의합니다. <a id="pv">[자세히]</a></span></label>'+
     '<div id="privacy" class="privacy hidden">수집항목: 이름, 연락처, 채무·소득 정보 / 이용목적: 채무조정 법률상담 연결 / 보유기간: 상담 종료 후 관계법령에 따름. 동의를 거부할 수 있으나 이 경우 상담 연결이 제한됩니다.</div>'+
-    '<button class="btn" id="submit">내 탕감액 확인하기</button>';
+    '<button class="btn" id="submit">내 탕감액 확인하기</button>');
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   nm.oninput=function(){state.name=nm.value;};
   ph.oninput=function(){var d=ph.value.replace(/\D/g,'').slice(0,11);var p=d.length>7?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):d.length>3?d.slice(0,3)+'-'+d.slice(3):d;state.phone=p;ph.value=p;};
@@ -236,8 +238,8 @@ function submit(){
 }
 function renderDone(){
   bar.style.width='100%';
-  body.innerHTML='<div class="done"><div class="ic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none"><path d="M5 13l4 4L19 7" stroke="#0066cc" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
-    '<h2>진단 신청 완료!</h2><p>'+esc(state.name.trim())+'님, 접수되었습니다.<br>담당자가 곧 연락드려 조정 가능액을 안내드립니다.</p></div>';
+  paint('<div class="done"><div class="ic"><svg viewBox="0 0 24 24" width="30" height="30" fill="none"><path d="M5 13l4 4L19 7" stroke="#0066cc" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+    '<h2>진단 신청 완료!</h2><p>'+esc(state.name.trim())+'님, 접수되었습니다.<br>담당자가 곧 연락드려 조정 가능액을 안내드립니다.</p></div>');
   try{var fc=document.getElementById('formcard');if(fc&&fc.scrollIntoView)fc.scrollIntoView({behavior:'smooth',block:'center'});}catch(x){}
 }
 
@@ -263,14 +265,15 @@ route();
     ['서*연','2,100만원','이자 전액 면제 예상'],['신*우','5,900만원','원금 89% 탕감 예상']
   ];
   var track=document.getElementById('liveTrack');if(!track)return;
-  var off=0,ROWH=53;
+  var ROWH=53;
   function fmtDate(back){var d=new Date(Date.now()-back*86400000);return ('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2);}
-  function render(){var h='';for(var i=0;i<5;i++){var r=ROWS[(off+i)%ROWS.length];h+='<div class="live-row"><span class="lr-d">'+fmtDate(i>=4?1:0)+'</span><span class="lr-n">'+r[0]+'</span><span class="lr-a">'+r[1]+'</span><span class="lr-r">'+r[2]+'</span></div>';}track.innerHTML=h;}
-  render();
+  var h='';for(var i=0;i<ROWS.length;i++){var r=ROWS[i];h+='<div class="live-row"><span class="lr-d">'+fmtDate(i<3?0:1)+'</span><span class="lr-n">'+r[0]+'</span><span class="lr-a">'+r[1]+'</span><span class="lr-r">'+r[2]+'</span></div>';}
+  track.innerHTML=h;
+  var cnt=document.getElementById('liveCount');
   setInterval(function(){
-    track.style.transition='transform .55s cubic-bezier(.25,.1,.25,1)';track.style.transform='translateY(-'+ROWH+'px)';
-    setTimeout(function(){off=(off+1)%ROWS.length;track.style.transition='none';track.style.transform='translateY(0)';render();var c=document.getElementById('liveCount');if(c)c.textContent=parseInt(c.textContent,10)+1;},560);
-  },2000);
+    track.style.transition='transform .6s cubic-bezier(.4,0,.2,1)';track.style.transform='translateY(-'+ROWH+'px)';
+    setTimeout(function(){track.style.transition='none';track.style.transform='translateY(0)';track.appendChild(track.firstElementChild);if(cnt)cnt.textContent=parseInt(cnt.textContent,10)+1;},610);
+  },2400);
 })();
 </script>
 </body>
