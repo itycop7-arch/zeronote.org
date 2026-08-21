@@ -54,8 +54,9 @@ h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .q{font-size:clamp(20px,5.5vw,24px);font-weight:600;margin:8px 0 4px;letter-spacing:-0.4px;line-height:1.35}
 .qn{font-size:14px;color:#86868b;margin-bottom:18px}
 .opts{display:flex;flex-direction:column;gap:10px}
-.chip{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid rgba(0,0,0,.15);border-radius:11px;padding:16px;font-size:clamp(14px,3.8vw,16px);font-family:inherit;color:#1d1d1f;cursor:pointer;transition:all .12s}
-.chip:hover{border-color:#0066cc}
+.chip{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid rgba(0,0,0,.15);border-radius:11px;padding:16px;font-size:clamp(14px,3.8vw,16px);font-family:inherit;color:#1d1d1f;cursor:pointer;transition:all .12s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+@media(hover:hover){.chip:hover{border-color:#0066cc}}
+.chip:active{border-color:#0066cc;background:#f2f7fd}
 .chip .bx{width:24px;height:24px;border-radius:7px;border:1px solid rgba(0,0,0,.2);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;transition:all .12s}
 .chip .bx svg{opacity:0;width:14px;height:14px}
 .chip.sel{border:2px solid #0066cc;background:rgba(0,102,204,.06);font-weight:600;padding:15px}
@@ -71,10 +72,10 @@ h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .agree input{width:18px;height:18px;margin-top:1px;accent-color:#0066cc;flex-shrink:0}
 .agree a{color:#0066cc;text-decoration:underline;cursor:pointer}
 .privacy{font-size:12px;color:#86868b;background:#f5f5f7;border-radius:10px;padding:12px 14px;margin-bottom:14px;max-height:120px;overflow:auto;line-height:1.6}
-.subbtn{width:100%;border:none;border-radius:980px;background:#0066cc;color:#fff;font-size:17px;font-weight:400;font-family:inherit;padding:16px;cursor:pointer;transition:transform .1s}
+.subbtn{width:100%;border:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border-radius:980px;background:#0066cc;color:#fff;font-size:17px;font-weight:400;font-family:inherit;padding:16px;cursor:pointer;transition:transform .1s}
 .subbtn:active{transform:scale(.98)}
 .err{color:#d70015;font-size:13px;margin-bottom:10px;text-align:center}
-.back{background:none;border:none;color:#aaa;font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:12px;padding:0}
+.back{background:none;border:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;color:#aaa;font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:12px;padding:0}
 .hidden{display:none}
 .done{text-align:center;padding:20px 4px}
 .done .ic{width:64px;height:64px;border-radius:50%;background:rgba(0,102,204,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
@@ -190,7 +191,18 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;
 function setBar(){var w=state.screen==='q_debt'?33:(state.screen==='q_income'?66:100);bar.style.width=w+'%';}
 function paint(html){body.innerHTML='<div class="screen">'+html+'</div>';}
 function chips(list){return '<div class="opts">'+list.map(function(o){return '<button class="chip" data-v="'+esc(o.v)+'"><span class="bx">'+CHECK+'</span>'+esc(o.v)+'</button>';}).join('')+'</div>';}
-function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip'),function(b){b.onclick=function(){cb(b.getAttribute('data-v'),b);};});}
+function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip'),function(b){
+  var fired=false,sx=0,sy=0;
+  function fire(){if(fired)return;fired=true;cb(b.getAttribute('data-v'),b);setTimeout(function(){fired=false;},600);}
+  if(window.PointerEvent){
+    b.addEventListener('pointerdown',function(e){sx=e.clientX;sy=e.clientY;},{passive:true});
+    b.addEventListener('pointerup',function(e){if(Math.abs(e.clientX-sx)<12&&Math.abs(e.clientY-sy)<12)fire();},{passive:true});
+  }else{
+    b.addEventListener('touchstart',function(e){var t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+    b.addEventListener('touchend',function(e){var t=e.changedTouches[0];if(Math.abs(t.clientX-sx)<12&&Math.abs(t.clientY-sy)<12){e.preventDefault();fire();}},{passive:false});
+  }
+  b.addEventListener('click',fire);
+});}
 function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;setTimeout(function(){state.screen=next;route();},260);}
 function renderDebtQ(){setBar();paint('<div class="step-no">STEP 1 / 3</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">해당하는 금액을 선택해주세요.</div>'+chips(DEBT));bindChips(function(v,el){selectAdvance(v,el,'debt','q_income');});}
 function renderIncomeQ(){setBar();paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));bindChips(function(v,el){selectAdvance(v,el,'income','contact');});document.getElementById('back').onclick=function(){state.screen='q_debt';route();};}
