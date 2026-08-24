@@ -22,6 +22,16 @@ var KAKAO_PIXEL_ID='8030943656260648783';
 function kakaoLead(){
   try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation();}catch(e){}
 }
+/* 퍼널 단계 이벤트 (카카오 viewContent 태그로 집계, 세션당 1회) */
+function funnelStep(tag){
+  try{
+    if(!KAKAO_PIXEL_ID||!window.kakaoPixel)return;
+    var k='zn_fs_'+tag;
+    if(sessionStorage.getItem(k))return;
+    sessionStorage.setItem(k,'1');
+    kakaoPixel(KAKAO_PIXEL_ID).viewContent({id:tag});
+  }catch(e){}
+}
 </script>
 <script>
 (function(){var PIXEL='2014378389291516669';var TP=function(){return window.TossPixel;};var uid=function(){return 'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);};var n=0,t=setInterval(function(){if(TP()){clearInterval(t);try{TP()(PIXEL).pageView&&TP()(PIXEL).pageView();}catch(e){}}else if(++n>60)clearInterval(t);},250);var of=window.fetch;window.fetch=function(){var u=(arguments[0]&&arguments[0].url)||arguments[0]||'';var pr=of.apply(this,arguments);try{if(String(u).indexOf('script.google.com/macros')>-1){pr.then(function(){try{TP()(PIXEL).lead({event_id:uid(),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form'});}catch(e){}});}}catch(e){}return pr;};})();
@@ -218,7 +228,7 @@ function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip
   }
   b.addEventListener('click',fire);
 });}
-function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;setTimeout(function(){state.screen=next;route();},260);}
+function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;funnelStep(key==='debt'?'step1_debt':'step2_income');setTimeout(function(){state.screen=next;route();},260);}
 function renderDebtQ(){setBar();paint('<div class="step-no">STEP 1 / 3</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">해당하는 금액을 선택해주세요.</div>'+chips(DEBT));bindChips(function(v,el){selectAdvance(v,el,'debt','q_income');});}
 function renderIncomeQ(){setBar();paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));bindChips(function(v,el){selectAdvance(v,el,'income','contact');});document.getElementById('back').onclick=function(){state.screen='q_debt';route();};}
 function renderContact(){
@@ -233,7 +243,8 @@ function renderContact(){
     '<div id="privacy" class="privacy hidden">수집항목: 이름, 연락처, 채무·소득 정보 / 이용목적: 채무조정 법률상담 연결 / 보유기간: 상담 종료 후 관계법령에 따름. 동의를 거부할 수 있으나 이 경우 상담 연결이 제한됩니다.</div>'+
     '<button class="subbtn" id="submit">내 탕감액 확인하기</button>');
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
-  nm.oninput=function(){state.name=nm.value;};
+  funnelStep('step3_contact');
+  nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
   ph.oninput=function(){var d=ph.value.replace(/\D/g,'').slice(0,11);var p=d.length>7?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):d.length>3?d.slice(0,3)+'-'+d.slice(3):d;state.phone=p;ph.value=p;};
   ag.onchange=function(){state.agreed=ag.checked;};
   document.getElementById('pv').onclick=function(){document.getElementById('privacy').classList.toggle('hidden');};
