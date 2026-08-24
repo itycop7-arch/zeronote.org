@@ -210,7 +210,7 @@ function sendEntry(entry){
   var url=SHEET_URL;
   try{fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(entry)}).catch(function(){});}catch(x){}
   try{if(navigator.sendBeacon)navigator.sendBeacon(url,JSON.stringify(entry));}catch(x){}
-  try{fetch(SUPA_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY},body:JSON.stringify({p_id:entry.id,p_submitted_at:entry['접수일시']||'',p_name:entry['이름']||'',p_phone:entry['연락처']||'',p_debt:entry['채무금액']||'',p_income:entry['월평균급여']||'',p_page:'zeronote.org'})}).then(function(r){if(r&&(r.ok||r.status===409))queueRemove('zeronote_pending',entry.id);}).catch(function(){});}catch(x){}
+  try{fetch(SUPA_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY},body:JSON.stringify({p_id:entry.id,p_submitted_at:entry['접수일시']||'',p_name:entry['이름']||'',p_phone:entry['연락처']||'',p_debt:entry['채무금액']||'',p_income:entry['월평균급여']||'',p_page:'zeronote.org/'+(entry['유입경로']||'direct')})}).then(function(r){if(r&&(r.ok||r.status===409))queueRemove('zeronote_pending',entry.id);}).catch(function(){});}catch(x){}
   confirmEntry(entry,url);
 }
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
