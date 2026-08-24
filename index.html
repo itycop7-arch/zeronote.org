@@ -8,6 +8,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://static.toss.im/lex/v1.js"></script>
+<script type="text/javascript" charset="UTF-8" src="https://t1.daumcdn.net/kas/static/kp.js"></script>
+<script>
+/* 카카오모먼트 픽셀 — KAKAO_PIXEL_ID에 트랙 ID 입력 시 활성화 */
+var KAKAO_PIXEL_ID='8030943656260648783';
+(function(){
+  if(!KAKAO_PIXEL_ID)return;
+  var n=0,t=setInterval(function(){
+    if(window.kakaoPixel){clearInterval(t);try{kakaoPixel(KAKAO_PIXEL_ID).pageView();}catch(e){}}
+    else if(++n>60)clearInterval(t);
+  },250);
+})();
+function kakaoLead(){
+  try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation();}catch(e){}
+}
+</script>
 <script>
 (function(){var PIXEL='2014378389291516669';var TP=function(){return window.TossPixel;};var uid=function(){return 'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);};var n=0,t=setInterval(function(){if(TP()){clearInterval(t);try{TP()(PIXEL).pageView&&TP()(PIXEL).pageView();}catch(e){}}else if(++n>60)clearInterval(t);},250);var of=window.fetch;window.fetch=function(){var u=(arguments[0]&&arguments[0].url)||arguments[0]||'';var pr=of.apply(this,arguments);try{if(String(u).indexOf('script.google.com/macros')>-1){pr.then(function(){try{TP()(PIXEL).lead({event_id:uid(),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form'});}catch(e){}});}}catch(e){}return pr;};})();
 </script>
@@ -233,7 +248,7 @@ function submit(){
   if(!state.agreed)return showErr('개인정보 수집 및 이용에 동의해주세요.');
   var entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),'접수일시':new Date().toLocaleString('ko-KR'),'이름':state.name.trim(),'연락처':state.phone,'채무금액':state.answers.debt||'','월평균급여':state.answers.income||''};
   queuePush('zeronote_backup',entry,200);queuePush('zeronote_pending',entry,50);sendEntry(entry);
-  state.submitted=true;renderDone();
+  state.submitted=true;kakaoLead();renderDone();
 }
 function renderDone(){
   bar.style.width='100%';
