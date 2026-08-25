@@ -31,18 +31,22 @@ var TRAFFIC_SRC=(function(){
 function kakaoLead(){
   try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation(TRAFFIC_SRC);}catch(e){}
 }
-/* 퍼널 단계 이벤트: 카카오 viewContent(태그_매체) + 토스 표준 이벤트, 세션당 1회 */
+/* 퍼널 단계 이벤트: 세션당 1회
+   - 모든 단계: 카카오 viewContent + 토스 표준이벤트 (퍼널 분석용)
+   - STEP3 도달만: 별도 '보조 전환' 이벤트로 구분 발동 (광고 최적화 기준용)
+     · 카카오: addToCart(장바구니) ← STEP1/2와 겹치지 않는 상위인텐트 신호
+     · 토스: initiateCheckout(구매시작) */
 var TOSS_STEP_MAP={step1_debt:'search',step2_income:'getOffer',step3_contact:'initiateCheckout'};
+function kx(fn,arg){try{if(KAKAO_PIXEL_ID&&window.kakaoPixel){var p=kakaoPixel(KAKAO_PIXEL_ID);if(typeof p[fn]==='function')arg!==undefined?p[fn](arg):p[fn]();}}catch(e){}}
+function tx(fn){try{if(fn&&window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst[fn]==='function')inst[fn]();}}catch(e){}}
 function funnelStep(tag){
   var k='zn_fs_'+tag;
   try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
-  try{
-    if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).viewContent({id:tag+'_'+TRAFFIC_SRC});
-  }catch(e){}
-  try{
-    var m=TOSS_STEP_MAP[tag];
-    if(m&&window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst[m]==='function')inst[m]();}
-  }catch(e){}
+  kx('viewContent',{id:tag+'_'+TRAFFIC_SRC});   // 퍼널 분석용(전 단계 공통)
+  tx(TOSS_STEP_MAP[tag]);
+  if(tag==='step3_contact'){                    // 보조 전환: STEP3 도달만 구분 발동
+    kx('addToCart',{name:'contact_'+TRAFFIC_SRC});
+  }
 }
 </script>
 <script>
