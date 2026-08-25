@@ -100,7 +100,12 @@ h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .chip.sel .bx{background:#0066cc;border-color:#0066cc}
 .chip.sel .bx svg{opacity:1}
 .hilite{background:rgba(0,102,204,.06);border:1px solid rgba(0,102,204,.2);border-radius:12px;padding:14px 16px;margin-bottom:18px;font-size:15px;color:#0055aa;text-align:center;line-height:1.5}
-.hilite b{font-weight:700;font-size:18px}
+.hilite b{font-weight:700;font-size:20px;color:#0066cc}
+.hilite .hnote{display:block;margin-top:5px;font-size:13px;color:#6e8aa8}
+.assure{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:#3a8a4e;line-height:1.5;word-break:keep-all}
+.assure:before{content:"🔒";font-size:13px}
+.assure b{color:#2e7d43;font-weight:700}
+.finenote{margin-top:10px;font-size:11px;color:#9a9aa0;text-align:center;line-height:1.5;word-break:keep-all}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:7px}
 .field input{width:100%;font-size:16px;font-family:inherit;padding:15px 16px;border:1px solid #d2d2d7;border-radius:11px;background:#fafafa;color:#1d1d1f;outline:none;transition:border .12s}
@@ -245,15 +250,16 @@ function renderDebtQ(){setBar();paint('<div class="step-no">STEP 1 / 3</div><div
 function renderIncomeQ(){setBar();paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 3</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));bindChips(function(v,el){selectAdvance(v,el,'income','contact');});document.getElementById('back').onclick=function(){state.screen='q_debt';route();};}
 function renderContact(){
   setBar();
-  var lvl=finalPct(state.answers.debt,state.answers.income)>=88?'매우 높음':'높음';
+  var pct=finalPct(state.answers.debt,state.answers.income);
   paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 3 / 3</div>'+
-    '<div class="hilite">회원님 원금 감면 가능성 <b>'+lvl+'</b><br>정확한 감면율은 상담을 통해 안내드립니다</div>'+
+    '<div class="hilite">회원님 예상 원금 감면 <b>최대 '+pct+'%</b><br><span class="hnote">아래 정보 입력 시 정확한 감면율을 안내드립니다</span></div>'+
     '<div id="err" class="err hidden"></div>'+
     '<div class="field"><label>이름</label><input id="name" type="text" placeholder="홍길동" autocomplete="name" value="'+esc(state.name)+'"></div>'+
-    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"></div>'+
+    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"><div class="assure">담당 변호사 1명만 비공개로 연락드립니다. 스팸·영업 전화 없이, <b>오늘 안에</b> 연락드려요.</div></div>'+
     '<label class="agree"><input type="checkbox" id="agree"'+(state.agreed?' checked':'')+'><span>개인정보 수집 및 이용에 동의합니다. <a id="pv">[자세히]</a></span></label>'+
     '<div id="privacy" class="privacy hidden">수집항목: 이름, 연락처, 채무·소득 정보 / 이용목적: 채무조정 법률상담 연결 / 보유기간: 상담 종료 후 관계법령에 따름. 동의를 거부할 수 있으나 이 경우 상담 연결이 제한됩니다.</div>'+
-    '<button class="subbtn" id="submit">내 탕감액 확인하기</button>');
+    '<button class="subbtn" id="submit">무료로 내 감면액 확인하기</button>'+
+    '<div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다.</div>');
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   funnelStep('step3_contact');
   nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
