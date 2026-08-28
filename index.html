@@ -67,6 +67,7 @@ section{padding:64px 20px}
 .hero h1{color:#1d1d1f;font-size:clamp(30px,8.5vw,44px);line-height:1.18;font-weight:600;letter-spacing:-0.6px;word-break:keep-all}
 .hero p{color:#6e6e73;font-size:clamp(15px,4.2vw,17px);line-height:1.6;max-width:400px;word-break:keep-all}
 .hbadge{display:inline-flex;align-items:center;gap:6px;background:#fdecec;color:#c62828;font-size:clamp(12.5px,3.4vw,14px);font-weight:700;padding:7px 15px;border-radius:999px;letter-spacing:-0.2px;word-break:keep-all;margin-bottom:-4px}
+.mbr{display:none}
 .stats{display:flex;gap:12px;justify-content:center;width:100%;max-width:420px}
 .stats .c{background:#f5f5f7;border-radius:18px;padding:20px 16px;flex:1;box-sizing:border-box}
 .stats .k{color:#86868b;font-size:13px;margin-bottom:6px}
@@ -155,6 +156,7 @@ footer a{color:#0066cc}
 [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
 [data-reveal].on{opacity:1;transform:none}
 @media(max-width:600px){
+  .mbr{display:inline}
   section{padding:44px 18px}
   .hero{padding:36px 18px 40px}
   .hero .in{gap:16px}
@@ -170,7 +172,7 @@ footer a{color:#0066cc}
   <div class="in">
     <div class="hbadge">🛡️ 채권추심·압류 중단 지원</div>
     <h1>내 빚, 얼마나<br>줄일 수 있을까?</h1>
-    <p>카드값·대출이 조금이라도 있다면 대상입니다. 신청과 함께 추심·압류 중단 지원.</p>
+    <p>카드값·대출이 조금이라도 있다면 대상입니다.<br class="mbr"> 신청과 함께 추심·압류 중단 지원.</p>
     <div class="stats">
       <div class="c"><div class="k">원금 감면</div><div class="v red">최대 97%</div></div>
       <div class="c"><div class="k">가족·직장 몰래</div><div class="v blue">비밀 보장</div></div>
