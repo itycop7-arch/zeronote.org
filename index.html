@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>제로노트 무료 채무진단 | 법무법인 율평</title>
 <meta name="description" content="카드값·대출이 조금이라도 있다면 대상입니다. 30초 비대면 무료 채무진단. 원금 최대 97% 감면.">
+<meta name="theme-color" content="#0066cc">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://static.toss.im/lex/v1.js"></script>
@@ -158,11 +161,16 @@ footer a{color:#0066cc}
 @media(max-width:600px){
   .mbr{display:inline}
   section{padding:44px 18px}
-  .hero{padding:36px 18px 40px}
-  .hero .in{gap:16px}
+  #form{padding-top:12px}
+  .hero{padding:28px 18px 18px}
+  .hero .in{gap:13px}
   .ba-sec .sub{margin:6px 0 28px}
-  .fpad{padding:26px 18px}
+  .fpad{padding:22px 18px}
 }
+.stickycta{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(115%);transition:transform .32s cubic-bezier(.25,.1,.25,1);background:#0066cc;color:#fff;font-size:16px;font-weight:600;font-family:inherit;text-align:center;text-decoration:none;padding:16px 20px;box-shadow:0 -6px 20px rgba(0,0,0,.14);letter-spacing:-0.2px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.stickycta.show{transform:translateY(0)}
+.stickycta:active{background:#0059b3}
+@media(min-width:601px){.stickycta{max-width:680px;left:50%;transform:translateX(-50%) translateY(140%);border-radius:14px 14px 0 0}.stickycta.show{transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
@@ -182,6 +190,13 @@ footer a{color:#0066cc}
   </div>
 </section>
 
+<section id="form">
+  <div class="formcard" data-reveal>
+    <div class="prog"><i id="bar"></i></div>
+    <div class="fpad"><div class="cbody" id="cbody"></div></div>
+  </div>
+</section>
+
 <section class="ba-sec" id="baSec">
   <div class="inner" data-reveal>
     <h2>채무조정 전과 후</h2>
@@ -191,13 +206,6 @@ footer a{color:#0066cc}
       <div class="col"><div class="amt blue">300만원</div><div class="bar b-after" id="barAfter"></div><div class="lab blue">조정 후</div></div>
     </div>
     <div class="ba-tag">원금 97% 탕감 + 이자 전액 면제</div>
-  </div>
-</section>
-
-<section id="form">
-  <div class="formcard" data-reveal>
-    <div class="prog"><i id="bar"></i></div>
-    <div class="fpad"><div class="cbody" id="cbody"></div></div>
   </div>
 </section>
 
@@ -226,6 +234,8 @@ footer a{color:#0066cc}
     Copyright 법무법인 율평 2026 All rights reserved.
   </div>
 </footer>
+
+<a href="#form" class="stickycta" id="stickyCta">30초 무료 채무진단 시작하기 →</a>
 
 <script>
 var SHEET_URL='https://script.google.com/macros/s/AKfycbzyf_SXH6DffQNoy25l7T7AeAWCTue1_YhDho_eIrj7z6CHdfYp4Wvsnh4xxxLzwdy2/exec';
@@ -334,6 +344,22 @@ route();
   if(!('IntersectionObserver' in window)){Array.prototype.forEach.call(els,function(e){e.classList.add('on');});return;}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.15});
   Array.prototype.forEach.call(els,function(e){io.observe(e);});
+})();
+</script>
+<script>
+(function(){
+  var bar=document.getElementById('stickyCta'),form=document.getElementById('form');
+  if(!bar||!form)return;
+  function update(){
+    var done=(typeof state!=='undefined')&&state.submitted;
+    var r=form.getBoundingClientRect();
+    var out=(r.bottom<120)||(r.top>window.innerHeight-60);
+    if(out&&!done)bar.classList.add('show');else bar.classList.remove('show');
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update,{passive:true});
+  window.addEventListener('load',update);
+  update();
 })();
 </script>
 </body>
