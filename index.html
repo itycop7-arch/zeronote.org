@@ -32,7 +32,7 @@ var TRAFFIC_SRC=(function(){
   },250);
 })();
 function kakaoLead(){
-  try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation(TRAFFIC_SRC);}catch(e){}
+  try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation({tag:TRAFFIC_SRC});}catch(e){}
 }
 /* 퍼널 단계 이벤트: 세션당 1회
    - 모든 단계: 카카오 viewContent + 토스 표준이벤트 (퍼널 분석용)
@@ -48,7 +48,7 @@ function funnelStep(tag){
   kx('viewContent',{id:tag+'_'+TRAFFIC_SRC});   // 퍼널 분석용(전 단계 공통)
   tx(TOSS_STEP_MAP[tag]);
   if(tag==='step3_contact'){                    // 보조 전환: STEP3 도달만 구분 발동
-    kx('addToCart',{name:'contact_'+TRAFFIC_SRC});
+    kx('addToCart',{tag:'contact_'+TRAFFIC_SRC});
   }
 }
 </script>
