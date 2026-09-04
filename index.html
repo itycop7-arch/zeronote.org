@@ -77,7 +77,7 @@ section{padding:64px 20px}
 .stats .v{font-size:clamp(24px,6.5vw,32px);font-weight:700;letter-spacing:-0.4px;white-space:nowrap}
 .red{color:#d70015}.blue{color:#0066cc}
 .cta{margin-top:8px;display:inline-block;background:#0066cc;color:#fff;font-size:17px;font-weight:400;border-radius:980px;padding:14px 32px;text-decoration:none;transition:transform .1s}
-.cta:active{transform:scale(.95)}
+.cta:active{transform:scale(.95)}.hero-q{width:100%;max-width:420px;margin-top:4px;text-align:left}.hq-label{font-size:clamp(14px,3.8vw,16px);font-weight:600;color:#1d1d1f;margin-bottom:10px;text-align:center}.hero-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hero-opts .chip{padding:13px 10px;font-size:clamp(13px,3.6vw,15px);justify-content:center;text-align:center;gap:6px;border-radius:12px}.hero-opts .chip .bx{display:none}.hq-sub{color:#86868b;font-size:12px;margin-top:8px;text-align:center}
 .disc{color:#86868b;font-size:12px;word-break:keep-all}
 h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .ba-sec{text-align:center}
@@ -185,7 +185,7 @@ footer a{color:#0066cc}
       <div class="c"><div class="k">원금 감면</div><div class="v red">최대 97%</div></div>
       <div class="c"><div class="k">가족·직장 몰래</div><div class="v blue">비밀 보장</div></div>
     </div>
-    <a href="#form" class="cta">내 조정 가능액 30초 진단</a>
+    <div class="hero-q" id="heroQ"><div class="hq-label">STEP 1 · 현재 부담 중인 채무금액은?</div><div class="hero-opts" id="heroDebt"></div><div class="hq-sub">탭 한 번이면 바로 진단이 시작됩니다</div></div>
     <div class="disc">*실제 감면율은 개인 채무 상황·제도에 따라 달라집니다.</div>
   </div>
 </section>
@@ -322,6 +322,7 @@ function renderDone(){
 }
 function route(){if(state.submitted)return renderDone();switch(state.screen){case 'q_debt':return renderDebtQ();case 'q_income':return renderIncomeQ();case 'contact':return renderContact();default:return renderDebtQ();}}
 route();
+(function(){var h=document.getElementById('heroDebt');if(!h)return;h.innerHTML=DEBT.map(function(o){return '<button type="button" class="chip" data-v="'+esc(o.v)+'"><span class="bx">'+CHECK+'</span>'+esc(o.v)+'</button>';}).join('');Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(x){x.classList.remove('sel');});selectAdvance(b.getAttribute('data-v'),b,'debt','q_income');setTimeout(function(){var f=document.getElementById('form')||document.querySelector('.form');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});},160);});});})();
 
 (function(){
   var after=document.getElementById('barAfter');if(!after)return;
