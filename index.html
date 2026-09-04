@@ -77,7 +77,7 @@ section{padding:64px 20px}
 .stats .v{font-size:clamp(24px,6.5vw,32px);font-weight:700;letter-spacing:-0.4px;white-space:nowrap}
 .red{color:#d70015}.blue{color:#0066cc}
 .cta{margin-top:8px;display:inline-block;background:#0066cc;color:#fff;font-size:17px;font-weight:400;border-radius:980px;padding:14px 32px;text-decoration:none;transition:transform .1s}
-.cta:active{transform:scale(.95)}.hero-q{width:100%;max-width:420px;margin-top:4px;text-align:left}.hq-label{font-size:clamp(14px,3.8vw,16px);font-weight:600;color:#1d1d1f;margin-bottom:10px;text-align:center}.hero-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hero-opts .chip{padding:13px 10px;font-size:clamp(13px,3.6vw,15px);justify-content:center;text-align:center;gap:6px;border-radius:12px}.hero-opts .chip .bx{display:none}.hq-sub{color:#86868b;font-size:12px;margin-top:8px;text-align:center}
+.cta:active{transform:scale(.95)}.hero-q{width:100%;max-width:440px;margin-top:2px}.hq-label{font-size:clamp(17px,4.8vw,21px);font-weight:700;color:#1d1d1f;letter-spacing:-0.3px;word-break:keep-all}.hq-help{color:#0066cc;font-size:clamp(13px,3.6vw,15px);margin:6px 0 14px;word-break:keep-all}.hq-help b{font-weight:700}.hero-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}.hero-opts .chip{min-height:52px;padding:13px 12px;font-size:clamp(14px,3.8vw,16px);font-weight:600;justify-content:space-between;text-align:left;gap:6px;border-radius:13px;border:1.5px solid rgba(0,0,0,.14);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .08s,border-color .12s,background .12s}.hero-opts .chip .bx{display:none}.hero-opts .chip::after{content:"\203A";color:#0066cc;font-size:20px;line-height:1;font-weight:400;flex-shrink:0}.hero-opts .chip:active{transform:scale(.97)}.hero-opts .chip.sel{padding:12px 11px}.hq-sub{color:#86868b;font-size:12px;margin-top:10px;word-break:keep-all}.trust-top{max-width:680px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 10px;font-size:clamp(13px,3.5vw,14px);color:#1d1d1f;padding:0 4px}.trust-top strong{color:#d70015;font-weight:700}.trust-top .tt-sep{color:#c7c7cc}
 .disc{color:#86868b;font-size:12px;word-break:keep-all}
 h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .ba-sec{text-align:center}
@@ -185,12 +185,13 @@ footer a{color:#0066cc}
       <div class="c"><div class="k">원금 감면</div><div class="v red">최대 97%</div></div>
       <div class="c"><div class="k">가족·직장 몰래</div><div class="v blue">비밀 보장</div></div>
     </div>
-    <div class="hero-q" id="heroQ"><div class="hq-label">STEP 1 · 현재 부담 중인 채무금액은?</div><div class="hero-opts" id="heroDebt"></div><div class="hq-sub">탭 한 번이면 바로 진단이 시작됩니다</div></div>
+    <div class="hero-q" id="heroQ"><div class="hq-label">지금 내 빚, 얼마나 줄어들까요?</div><div class="hq-help">채무금액만 고르면 <b>10초 안에 예상 감면율</b>이 나옵니다</div><div class="hero-opts" id="heroDebt"></div><div class="hq-sub">정확한 금액 몰라도 대략 골라도 됩니다 · 무료 · 비밀보장</div></div>
     <div class="disc">*실제 감면율은 개인 채무 상황·제도에 따라 달라집니다.</div>
   </div>
 </section>
 
 <section id="form">
+  <div class="trust-top" data-reveal><span class="livepill"><span class="dot"></span>LIVE</span><span>오늘 <strong id="liveCountTop">188</strong>명 무료진단 신청</span><span class="tt-sep">·</span><span>변호사 1:1 비공개 상담</span></div>
   <div class="formcard" data-reveal>
     <div class="prog"><i id="bar"></i></div>
     <div class="fpad"><div class="cbody" id="cbody"></div></div>
@@ -322,7 +323,7 @@ function renderDone(){
 }
 function route(){if(state.submitted)return renderDone();switch(state.screen){case 'q_debt':return renderDebtQ();case 'q_income':return renderIncomeQ();case 'contact':return renderContact();default:return renderDebtQ();}}
 route();
-(function(){var h=document.getElementById('heroDebt');if(!h)return;h.innerHTML=DEBT.map(function(o){return '<button type="button" class="chip" data-v="'+esc(o.v)+'"><span class="bx">'+CHECK+'</span>'+esc(o.v)+'</button>';}).join('');Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(x){x.classList.remove('sel');});selectAdvance(b.getAttribute('data-v'),b,'debt','q_income');setTimeout(function(){var f=document.getElementById('form')||document.querySelector('.form');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});},160);});});})();
+(function(){var h=document.getElementById('heroDebt');if(!h)return;h.innerHTML=DEBT.map(function(o){return '<button type="button" class="chip" data-v="'+esc(o.v)+'"><span class="bx">'+CHECK+'</span>'+esc(o.v)+'</button>';}).join('');var lock=false;Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){if(lock)return;lock=true;setTimeout(function(){lock=false;},700);Array.prototype.forEach.call(h.querySelectorAll('.chip'),function(x){x.classList.remove('sel');});selectAdvance(b.getAttribute('data-v'),b,'debt','q_income');setTimeout(function(){var f=document.getElementById('form');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});},170);});});})();
 
 (function(){
   var after=document.getElementById('barAfter');if(!after)return;
@@ -337,7 +338,7 @@ route();
   function fmtDate(back){var d=new Date(Date.now()-back*86400000);return ('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2);}
   var h='';for(var i=0;i<ROWS.length;i++){var r=ROWS[i];h+='<div class="lv-row"><span class="d">'+fmtDate(i<3?0:1)+'</span><span>'+r[0]+'</span><span>'+r[1]+'</span><span class="r">'+r[2]+'</span></div>';}
   track.innerHTML=h;var cnt=document.getElementById('liveCount');
-  setInterval(function(){track.style.transition='transform .6s cubic-bezier(.4,0,.2,1)';track.style.transform='translateY(-'+ROWH+'px)';setTimeout(function(){track.style.transition='none';track.style.transform='translateY(0)';track.appendChild(track.firstElementChild);if(cnt)cnt.textContent=parseInt(cnt.textContent,10)+1;},610);},2400);
+  setInterval(function(){track.style.transition='transform .6s cubic-bezier(.4,0,.2,1)';track.style.transform='translateY(-'+ROWH+'px)';setTimeout(function(){track.style.transition='none';track.style.transform='translateY(0)';track.appendChild(track.firstElementChild);if(cnt){cnt.textContent=parseInt(cnt.textContent,10)+1;var c2=document.getElementById('liveCountTop');if(c2)c2.textContent=cnt.textContent;}},610);},2400);
 })();
 
 (function(){
