@@ -8,8 +8,6 @@
 <meta name="theme-color" content="#0066cc">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script async src="https://static.toss.im/lex/v1.js"></script>
 <script async type="text/javascript" charset="UTF-8" src="https://t1.daumcdn.net/kas/static/kp.js"></script>
 <script>
@@ -36,7 +34,7 @@ function kakaoLead(){
 }
 /* 토스 전환(lead): 제출 즉시 발화 — 시트 응답을 기다리지 않음(웹뷰 조기 이탈 대비). SDK 미로드 시 최대 3초 재시도 */
 function tossLead(){
-  var tries=0;(function fire(){try{if(window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst.lead==='function'){inst.lead({event_id:'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form'});return;}}}catch(e){return;}if(++tries<12)setTimeout(fire,250);})();
+  var tries=0;(function fire(){try{if(window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst.lead==='function'){inst.lead({event_id:'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form',custom_param3:'h_'+(window.LP_H||'default')});return;}}}catch(e){return;}if(++tries<12)setTimeout(fire,250);})();
 }
 /* 퍼널 단계 이벤트: 세션당 1회 (카카오 전용)
    - 모든 단계: 카카오 viewContent (퍼널 분석용)
@@ -180,7 +178,19 @@ footer a{color:#0066cc}
 <section class="hero">
   <div class="in">
     <div class="hbadge">💳 카드값·대출 있으면 누구나 무료 대상</div>
-    <h1>내 빚, 얼마나<br>줄일 수 있을까?</h1>
+    <h1 id="hero-h1">내 빚, 얼마나<br>줄일 수 있을까?</h1>
+    <script>
+    /* 메시지 매치: 광고 소재 문구 = H1. ?h=키 — 화이트리스트만 허용(URL 텍스트 직접 삽입 없음). 키 없으면 기본 H1 */
+    (function(){var H={
+      '30s':'30초, 3가지 질문<br>무료 채무진단',
+      'card':'카드값 돌려막기<br>중이라면',
+      'call':'독촉 전화에<br>지쳤다면',
+      'rehab':'내 채무도<br>개인회생 될까?',
+      'alone':'빚 고민,<br>혼자 하지 마세요',
+      'hard':'빚 때문에<br>힘들다면',
+      'check':'채무조정 대상인지<br>30초 확인'
+    };var m=location.search.match(/[?&]h=([a-z0-9_-]+)/i);var k=m?m[1].toLowerCase():'';window.LP_H=H[k]?k:'default';if(H[k]){document.getElementById('hero-h1').innerHTML=H[k];}})();
+    </script>
     <p>복잡한 서류 없이 3가지 질문이면 끝.<br>30초 무료 진단.</p>
     <div class="stats">
       <div class="c"><div class="k">원금 감면</div><div class="v red">최대 97%</div></div>
