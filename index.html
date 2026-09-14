@@ -15,7 +15,7 @@
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 
-  ttq.load('DAJVAOBC77U70STH8T1G');
+  ttq.load('D95PCLBC77U79CKEQGK0');
   ttq.page();
 }(window, document, 'ttq');
 </script>
@@ -44,8 +44,21 @@ var TRAFFIC_SRC=(function(){
 function kakaoLead(){
   try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation({tag:TRAFFIC_SRC});}catch(e){}
 }
-/* 틱톡 전환: 제출 시 표준 이벤트 SubmitForm 1회 (퍼널 이벤트 없음) */
-function tiktokLead(){try{if(window.ttq&&typeof ttq.track==='function')ttq.track('SubmitForm',{content_name:'채무진단 신청'});}catch(e){}}
+/* Only newly submitted leads with confirmed Sheet storage are eligible.
+   Keep opaque IDs only; never include form answers or contact data in events. */
+var tiktokLeadState=(function(){try{return JSON.parse(localStorage.getItem('zn_tt_leads_v1')||'{}');}catch(e){return {};}})();
+function saveTiktokLeadState(){try{localStorage.setItem('zn_tt_leads_v1',JSON.stringify(tiktokLeadState));}catch(e){}}
+function registerTiktokLead(id){tiktokLeadState[id]={created:Date.now(),sent:false};saveTiktokLeadState();}
+function tiktokLead(id){
+  var item=tiktokLeadState[id];
+  if(!item||item.sent)return;
+  try{
+    if(window.ttq&&typeof ttq.track==='function'){
+      ttq.track('Lead',{}, {event_id:id});
+      item.sent=true;saveTiktokLeadState();
+    }
+  }catch(e){}
+}
 /* 토스 전환(lead): 제출 즉시 발화 — 시트 응답을 기다리지 않음(웹뷰 조기 이탈 대비). SDK 미로드 시 최대 3초 재시도 */
 function tossLead(){
   var tries=0;(function fire(){try{if(window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst.lead==='function'){inst.lead({event_id:'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form',custom_param3:'h_'+(window.LP_H||'default')});return;}}}catch(e){return;}if(++tries<12)setTimeout(fire,250);})();
@@ -270,6 +283,31 @@ var SUPA_URL='https://hrzppmqzhdyeybwqysua.supabase.co/rest/v1/rpc/submit_lead';
 var SUPA_KEY='sb_publishable_1GmdydKvgpx6xF8yqbjsNQ_pcXUzbpg';
 function queuePush(k,e,c){try{var l=JSON.parse(localStorage.getItem(k)||'[]');l.push(e);localStorage.setItem(k,JSON.stringify(l.slice(-c)));}catch(x){}}
 function queueRemove(k,id){try{var l=JSON.parse(localStorage.getItem(k)||'[]').filter(function(x){return x.id!==id;});localStorage.setItem(k,JSON.stringify(l));}catch(x){}}
+var tiktokSheetChecks={};
+function confirmTiktokEntry(entry,url){
+  var id=String(entry.id);
+  if(tiktokSheetChecks[id])return;
+  tiktokSheetChecks[id]=true;
+  var attempt=0;
+  function check(){
+    attempt++;
+    var cb='__zn_cb_'+id.replace(/[^a-z0-9]/gi,'')+'_'+attempt;
+    var done=false,s=document.createElement('script');
+    function finish(stored){
+      if(done)return;done=true;clearTimeout(timer);
+      delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);
+      if(stored){tiktokLead(id);delete tiktokSheetChecks[id];}
+      else if(attempt<3)setTimeout(check,4000);
+      else delete tiktokSheetChecks[id];
+    }
+    window[cb]=function(res){finish(!!res&&res.stored===true);};
+    s.onerror=function(){finish(false);};
+    var timer=setTimeout(function(){finish(false);},10000);
+    s.src=url+'?action=check&id='+encodeURIComponent(id)+'&callback='+cb;
+    document.head.appendChild(s);
+  }
+  setTimeout(check,4000);
+}
 function confirmEntry(entry,url){try{var cb='__zn_cb_'+String(entry.id).replace(/[^a-z0-9]/gi,'');var done=false;var s=document.createElement('script');var cleanup=function(){try{delete window[cb];}catch(x){window[cb]=undefined;}if(s.parentNode)s.parentNode.removeChild(s);};window[cb]=function(res){done=true;if(res&&res.stored)queueRemove('zeronote_pending',entry.id);cleanup();};s.onerror=function(){if(!done)cleanup();};s.src=url+'?action=check&id='+encodeURIComponent(entry.id)+'&callback='+cb;setTimeout(function(){if(!done)document.head.appendChild(s);},4000);setTimeout(function(){if(!done)cleanup();},15000);}catch(x){}}
 function sendEntry(entry){
   var url=SHEET_URL;
@@ -280,6 +318,12 @@ function sendEntry(entry){
 }
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
 setTimeout(retryPending,2000);
+/* Re-check storage on return visits, without re-sending personal information. */
+setTimeout(function(){Object.keys(tiktokLeadState).forEach(function(id){
+  var item=tiktokLeadState[id];
+  if(Date.now()-item.created>7*86400000){delete tiktokLeadState[id];return;}
+  if(!item.sent)confirmTiktokEntry({id:id},SHEET_URL);
+});saveTiktokLeadState();},2500);
 
 var DEBT=[{v:'500만원 미만',p:60},{v:'500~1천만원',p:68},{v:'1천~3천만원',p:75},{v:'3천~5천만원',p:83},{v:'5천만원~1억원',p:90},{v:'1억원 이상',p:96}];
 var INCOME=[{v:'150만원 미만',a:2},{v:'150~300만원',a:0},{v:'300~500만원',a:-3},{v:'500만원 이상',a:-6}];
@@ -337,8 +381,9 @@ function submit(){
   if(!/^010-\d{4}-\d{4}$/.test(state.phone))return showErr('010으로 시작하는 휴대폰 번호만 접수 가능합니다.');
   if(!state.agreed){var ael=document.querySelector('.agree');if(ael){ael.classList.remove('warn');void ael.offsetWidth;ael.classList.add('warn');ael.scrollIntoView({behavior:'smooth',block:'center'});}return showErr('개인정보 수집 및 이용에 동의해주세요.');}
   var entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),'접수일시':new Date().toLocaleString('ko-KR'),'이름':state.name.trim(),'연락처':state.phone,'채무금액':state.answers.debt||'','월평균급여':state.answers.income||'','유입경로':TRAFFIC_SRC};
+  registerTiktokLead(entry.id);confirmTiktokEntry({id:entry.id},SHEET_URL);
   queuePush('zeronote_backup',entry,200);queuePush('zeronote_pending',entry,50);sendEntry(entry);
-  state.submitted=true;kakaoLead();tossLead();tiktokLead();renderDone();
+  state.submitted=true;kakaoLead();tossLead();renderDone();
 }
 function renderDone(){
   bar.style.width='100%';
