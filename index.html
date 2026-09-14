@@ -8,6 +8,18 @@
 <meta name="theme-color" content="#0066cc">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230066cc'/><text x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='700' fill='%23ffffff' text-anchor='middle'>Z</text></svg>">
+<!-- TikTok Pixel Code Start -->
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+  ttq.load('DAJVAOBC77U70STH8T1G');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
+<!-- TikTok Pixel Code End -->
 <script async src="https://static.toss.im/lex/v1.js"></script>
 <script async type="text/javascript" charset="UTF-8" src="https://t1.daumcdn.net/kas/static/kp.js"></script>
 <script>
@@ -32,6 +44,8 @@ var TRAFFIC_SRC=(function(){
 function kakaoLead(){
   try{if(KAKAO_PIXEL_ID&&window.kakaoPixel)kakaoPixel(KAKAO_PIXEL_ID).participation({tag:TRAFFIC_SRC});}catch(e){}
 }
+/* 틱톡 전환: 제출 시 표준 이벤트 SubmitForm 1회 (퍼널 이벤트 없음) */
+function tiktokLead(){try{if(window.ttq&&typeof ttq.track==='function')ttq.track('SubmitForm',{content_name:'채무진단 신청'});}catch(e){}}
 /* 토스 전환(lead): 제출 즉시 발화 — 시트 응답을 기다리지 않음(웹뷰 조기 이탈 대비). SDK 미로드 시 최대 3초 재시도 */
 function tossLead(){
   var tries=0;(function fire(){try{if(window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst.lead==='function'){inst.lead({event_id:'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form',custom_param3:'h_'+(window.LP_H||'default')});return;}}}catch(e){return;}if(++tries<12)setTimeout(fire,250);})();
@@ -324,7 +338,7 @@ function submit(){
   if(!state.agreed){var ael=document.querySelector('.agree');if(ael){ael.classList.remove('warn');void ael.offsetWidth;ael.classList.add('warn');ael.scrollIntoView({behavior:'smooth',block:'center'});}return showErr('개인정보 수집 및 이용에 동의해주세요.');}
   var entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),'접수일시':new Date().toLocaleString('ko-KR'),'이름':state.name.trim(),'연락처':state.phone,'채무금액':state.answers.debt||'','월평균급여':state.answers.income||'','유입경로':TRAFFIC_SRC};
   queuePush('zeronote_backup',entry,200);queuePush('zeronote_pending',entry,50);sendEntry(entry);
-  state.submitted=true;kakaoLead();tossLead();renderDone();
+  state.submitted=true;kakaoLead();tossLead();tiktokLead();renderDone();
 }
 function renderDone(){
   bar.style.width='100%';
