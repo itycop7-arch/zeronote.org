@@ -152,6 +152,28 @@ h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .lv-fade{position:absolute;left:0;right:0;bottom:0;height:56px;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff);pointer-events:none}
 .lv-count{padding:14px 24px 18px;text-align:center;font-size:15px;color:#6e6e73;border-top:1px solid #f0f0f0}
 .lv-count strong{color:#1d1d1f;font-weight:700}
+.why-sec,.sys-sec,.trust-sec{text-align:center}
+.why-sec h2,.sys-sec h2,.trust-sec h2{word-break:keep-all}
+.why-sec .sub,.sys-sec .sub,.trust-sec .sub{margin:8px 0 28px;color:#86868b;font-size:15px;word-break:keep-all}
+.why-list,.sys-list{display:flex;flex-direction:column;gap:10px;text-align:left}
+.why-item{display:flex;align-items:center;gap:14px;background:#f5f5f7;border-radius:16px;padding:16px 18px}
+.why-item .ic{font-size:24px;flex-shrink:0;width:32px;text-align:center}
+.why-item b{display:block;font-size:16px;color:#1d1d1f;margin-bottom:2px}
+.why-item span{font-size:14px;color:#6e6e73;line-height:1.5;word-break:keep-all}
+.why-sec .cta,.trust-sec .cta{margin-top:24px}
+.why-sec .disc{margin-top:12px}
+.sys-item{background:#f5f5f7;border-radius:16px;padding:18px}
+.sys-item .tag{display:inline-block;font-size:12px;font-weight:700;color:#0066cc;background:rgba(0,102,204,.08);border-radius:999px;padding:3px 10px;margin-bottom:8px}
+.sys-item b{display:block;font-size:17px;color:#1d1d1f;margin-bottom:6px}
+.sys-item span{font-size:14px;color:#6e6e73;line-height:1.55;word-break:keep-all}
+.sys-note{margin-top:18px;font-size:14px;color:#6e6e73;line-height:1.55;word-break:keep-all}
+.trust-sec{background:#f5f5f7}
+.trust-grid{display:grid;grid-template-columns:1fr;gap:10px;text-align:left}
+.trust-item{background:#fff;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.trust-item .ic{font-size:22px}
+.trust-item b{font-size:16px;color:#1d1d1f}
+.trust-item span{font-size:14px;color:#6e6e73}
+@media(min-width:601px){.trust-grid{grid-template-columns:repeat(3,1fr)}.why-list{display:grid;grid-template-columns:1fr 1fr}}
 footer{background:#fff;border-top:1px solid #e0e0e0;padding:32px 20px 48px}
 footer .in{max-width:680px;margin:0 auto;font-size:12px;color:#86868b;line-height:1.8}
 footer a{color:#0066cc}
@@ -209,6 +231,36 @@ footer a{color:#0066cc}
   </div>
 </section>
 
+<section class="why-sec" id="why">
+  <div class="inner" data-reveal>
+    <h2>감면율을 결정하는 5가지</h2>
+    <div class="sub">이 5가지를 보고 법원·기관이 개별적으로 판단해요</div>
+    <div class="why-list">
+      <div class="why-item"><div class="ic">💼</div><div><b>월소득</b><span>소득 대비 갚을 수 있는 금액을 기준으로 변제액이 정해져요</span></div></div>
+      <div class="why-item"><div class="ic">🏠</div><div><b>재산</b><span>집·차·예금 등 보유 재산에 따라 결과가 달라져요</span></div></div>
+      <div class="why-item"><div class="ic">💳</div><div><b>총 채무액과 종류</b><span>카드·대출·사채 등 채무의 규모와 성격</span></div></div>
+      <div class="why-item"><div class="ic">👨‍👩‍👧</div><div><b>부양가족·생계비</b><span>부양가족이 많을수록 인정되는 생계비가 커져요</span></div></div>
+      <div class="why-item"><div class="ic">📞</div><div><b>연체·추심 상태</b><span>현재 연체 여부와 추심 진행 상황</span></div></div>
+    </div>
+    <a href="#form" class="cta">내 감면율 30초 확인</a>
+    <div class="disc">*위 요소를 바탕으로 개별 판단하며, 결과는 사람마다 달라요.</div>
+  </div>
+</section>
+
+<!-- [검수 필요] 제도 설명 문구는 변호사 검수 후 확정 -->
+<section class="sys-sec" id="sys">
+  <div class="inner" data-reveal>
+    <h2>제도 한눈에</h2>
+    <div class="sub">상황에 따라 맞는 제도가 달라요</div>
+    <div class="sys-list">
+      <div class="sys-item"><div class="tag">법원</div><b>개인회생</b><span>일정 기간 소득 중 일부를 변제하면 남은 채무는 면책돼요. 꾸준한 소득이 있는 분에게 적합해요.</span></div>
+      <div class="sys-item"><div class="tag">신용회복위원회</div><b>채무조정·워크아웃</b><span>이자 감면과 상환 기간 연장으로 매달 갚는 부담을 낮추는 방식이에요.</span></div>
+      <div class="sys-item"><div class="tag">법원</div><b>개인파산·면책</b><span>변제 능력이 없을 때 채무를 정리하는 절차예요.</span></div>
+    </div>
+    <div class="sys-note">어느 제도가 맞는지는 소득·재산·채무 상황에 따라 달라요. 진단 후 변호사가 직접 안내해 드려요.</div>
+  </div>
+</section>
+
 <section class="ba-sec" id="baSec">
   <div class="inner" data-reveal>
     <h2>채무조정 전과 후</h2>
@@ -221,16 +273,14 @@ footer a{color:#0066cc}
   </div>
 </section>
 
-<section class="live">
+<section class="trust-sec" id="trust">
   <div class="inner" data-reveal>
-    <div class="lv-hd">
-      <span class="livepill"><span class="dot"></span>LIVE</span>
-      <h2>실시간 탕감신청 현황</h2>
-    </div>
-    <div class="lv-box">
-      <div class="lv-head"><span>진단일</span><span>신청자</span><span>채무액</span><span>예상결과</span></div>
-      <div class="lv-view"><div id="liveTrack"></div><div class="lv-fade"></div></div>
-      <div class="lv-count">오늘 <strong id="liveCount">188</strong>명이 무료진단을 신청했습니다</div>
+    <h2>법무법인 율평이 직접 확인합니다</h2>
+    <div class="sub">대표변호사 김용일 · 광고책임변호사 김용일</div>
+    <div class="trust-grid">
+      <div class="trust-item"><div class="ic">⚖️</div><b>변호사 1:1 비공개 상담</b><span>담당 변호사 1명만 연락드려요</span></div>
+      <div class="trust-item"><div class="ic">🙅</div><b>영업전화 없음</b><span>상담 외 연락은 하지 않아요</span></div>
+      <div class="trust-item"><div class="ic">🏢</div><b>서울·경기 사무소</b><span>서초 · 광주 사무소 운영</span></div>
     </div>
   </div>
 </section>
@@ -242,6 +292,7 @@ footer a{color:#0066cc}
     문의처: <a href="tel:070-8098-8711">070-8098-8711</a> | <a href="mailto:zeronotecp@naver.com">zeronotecp@naver.com</a><br>
     서울사무소: 서울 서초구 서초대로 286, 서초프라자 1010호<br>
     경기사무소: 경기 광주시 광주대로 208, 2층 201호<br>
+    사업자등록번호 802-81-02738<br>
     본 페이지는 법률상담 연결을 위한 광고이며, 감면율 등 결과는 개인 사례에 따라 다를 수 있습니다.<br>
     Copyright 법무법인 율평 2026 All rights reserved.
   </div>
