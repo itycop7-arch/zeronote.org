@@ -270,7 +270,7 @@ var SUPA_KEY='sb_publishable_1GmdydKvgpx6xF8yqbjsNQ_pcXUzbpg';
 function queuePush(k,e,c){try{var l=JSON.parse(localStorage.getItem(k)||'[]');l.push(e);localStorage.setItem(k,JSON.stringify(l.slice(-c)));}catch(x){}}
 function queueRemove(k,id){try{var l=JSON.parse(localStorage.getItem(k)||'[]').filter(function(x){return x.id!==id;});localStorage.setItem(k,JSON.stringify(l));}catch(x){}}
 function sendEntry(entry){
-  try{fetch(SUPA_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},body:JSON.stringify({p_id:entry.id,p_submitted_at:entry['접수일시']||'',p_name:entry['이름']||'',p_phone:entry['연락처']||'',p_debt:entry['채무금액']||'',p_income:entry['월평균급여']||'',p_page:'zeronote.org/'+(entry['유입경로']||'direct')})}).then(function(r){if(r&&(r.ok||r.status===204||r.status===409))queueRemove('zeronote_pending',entry.id);}).catch(function(){});}catch(x){}
+  try{fetch(SUPA_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY},body:JSON.stringify({p_id:entry.id,p_submitted_at:entry['접수일시']||'',p_name:entry['이름']||'',p_phone:entry['연락처']||'',p_debt:entry['채무금액']||'',p_income:entry['월평균급여']||'',p_page:'zeronote.org/'+(entry['유입경로']||'direct')})}).then(function(r){if(r&&(r.ok||r.status===204||r.status===409))queueRemove('zeronote_pending',entry.id);}).catch(function(){});}catch(x){}
 }
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
 setTimeout(retryPending,2000);
