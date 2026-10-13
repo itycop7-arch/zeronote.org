@@ -331,7 +331,7 @@ function renderResult(){
   if(!state.analyzed){
     paint('<div class="analyzing"><div class="spin"></div><div style="font-weight:700;font-size:16px">회원님 채무 분석 중…</div><div style="font-size:13px;color:#86868b;margin-top:6px">감면 가능액을 계산하고 있어요</div></div>');
     funnelStep('step_result');
-    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},1300);
+    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},500);
     return;
   }
   var p=finalPct(state.answers.debt,state.answers.income),m=debtMid(state.answers.debt),cut=Math.round(m*p/100),left=m-cut;
@@ -352,15 +352,15 @@ function renderContact(){
   setBar();
   paint('<button class="back" id="back">← 결과 다시보기</button>'+
     '<div class="recap"><span>예상 감면 최대 '+won(Math.round(debtMid(state.answers.debt)*finalPct(state.answers.debt,state.answers.income)/100))+'만원</span><small>결과 받기 1단계 남음</small></div>'+
-    '<div class="q" style="font-size:clamp(18px,5vw,22px)">번호만 남기면<br>결과와 상담을 보내드려요</div>'+
-    '<div class="qn">담당 변호사가 오늘 안에 직접 연락드립니다.</div>'+
+    '<div class="q" style="font-size:clamp(18px,5vw,22px)">예상 결과가 나왔어요!<br>정확한 감면액, 어디로 보내드릴까요?</div>'+
+    '<div class="qn">감면 예상액과 내게 맞는 해결 방법을 담당 변호사가 직접 정리해 드려요.</div>'+
     '<div id="err" class="err hidden"></div>'+
     '<div class="field"><label>이름</label><input id="name" type="text" placeholder="홍길동" autocomplete="name" value="'+esc(state.name)+'"></div>'+
-    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"><div class="assure">가족·직장 몰래 진행됩니다. 변호사 직접 확인 후 담당 변호사 1명만 비공개로 연락드려요. 스팸·영업 전화 없이, <b>오늘 안에</b>.</div></div>'+
+    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"><div class="assure">가족·직장에 알리지 않아요 · 담당 변호사 1명만 연락 · 영업 전화 없음 · <b>오늘 안에</b> 연락드려요</div></div>'+
     '<label class="agree"><input type="checkbox" id="agree"'+(state.agreed?' checked':'')+'><span>[필수] 개인정보 수집·이용에 동의합니다. <a id="pv">[자세히]</a></span></label>'+
     '<div id="privacy" class="privacy hidden"><b>개인정보 수집·이용 동의 (개인정보처리자: 법무법인 율평)</b><br>① 수집·이용 목적: 개인회생·개인파산·채무조정 법률상담 신청 접수 및 상담 연결, 상담 진행 안내<br>② 수집 항목: 성명, 휴대전화번호, 채무금액, 월평균 소득 정보<br>③ 보유·이용 기간: 상담 종료 후 6개월 이내 지체 없이 파기하며, 관계 법령에 따라 보존 의무가 있는 경우 해당 기간 동안 보관합니다.<br>④ 동의 거부 권리 및 불이익: 귀하는 개인정보 수집·이용 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 상담 신청 및 연결 서비스 이용이 제한될 수 있습니다.<br>개인정보처리자: 법무법인 율평(대표변호사 김용일) · 문의: 070-8098-8711 / zeronotecp@naver.com</div>'+
-    '<button class="subbtn" id="submit">내 감면 결과 받고 상담 예약</button>'+
-    '<div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다.</div>');
+    '<button class="subbtn" id="submit">내 감면 예상액 확인하기 →</button>'+
+    '<div class="finenote" style="color:#3a3a3c;font-weight:600">상담은 무료예요. 진행 여부는 결과를 보고 직접 정하세요.</div><div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다.</div>');
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   funnelStep('step3_contact');
   nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
