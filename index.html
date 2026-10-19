@@ -164,32 +164,6 @@ h2{font-size:clamp(24px,6.5vw,28px);font-weight:600;letter-spacing:-0.4px}
 .recap{display:flex;justify-content:space-between;align-items:center;background:rgba(0,102,204,.08);border-radius:11px;padding:11px 14px;font-size:14px;font-weight:700;color:#0a4a8f;margin-bottom:14px}
 .recap small{font-size:11px;font-weight:600;color:#3d7bc0}
 .field .opt{color:#9aa5b3;font-weight:500;font-size:12px}
-/* compact result+form: single mobile screen */
-.ramt{font-size:clamp(26px,7.8vw,34px);margin:0}
-.rbig{font-size:14px;margin-top:10px}
-.rpct{margin-top:6px}
-.rpct span{font-size:12px;padding:4px 11px}
-.rbd{padding:10px 13px;margin:11px 0 2px;font-size:12.5px}
-.rbd .row{padding:3px 0}
-.rlead{font-size:12px}
-.rfine{font-size:10.5px;margin-top:7px}
-.fpad{padding:clamp(16px,4.5vw,30px) clamp(16px,4.5vw,28px)}
-.cbody .field{margin-bottom:10px}
-.cbody .field label{margin-bottom:4px;font-size:12px}
-.cbody .field input{padding:12px 14px}
-.assure{font-size:11.5px;margin-top:6px;line-height:1.45}
-.agree{margin-top:10px}
-.subbtn{margin-top:4px;padding:15px}
-.finenote{margin-top:7px}
-@media(max-height:780px){
-  .ramt{font-size:clamp(23px,7vw,30px)}
-  .rbd{padding:8px 12px;margin:9px 0 2px}
-  .rbd .row{padding:2px 0}
-  .rbig{margin-top:8px}
-  .fpad{padding:14px 16px}
-  .cbody .field{margin-bottom:8px}
-  .assure{line-height:1.4}
-}
 .back{background:none;border:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;color:#aaa;font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:12px;padding:0}
 .hidden{display:none}
 .done{text-align:center;padding:28px 6px 24px}
@@ -349,7 +323,7 @@ function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip
   }
   b.addEventListener('click',fire);
 });}
-function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;funnelStep(key==='debt'?'step1_debt':'step2_income');setTimeout(function(){state.screen=next;route();},120);}
+function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;funnelStep(key==='debt'?'step1_debt':'step2_income');setTimeout(function(){state.screen=next;route();},80);}
 function renderDebtQ(){setBar();paint('<div class="step-no">STEP 1 / 2</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">해당하는 금액을 선택해주세요.</div>'+chips(DEBT));bindChips(function(v,el){selectAdvance(v,el,'debt','q_income');});}
 function renderIncomeQ(){setBar();paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 2</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));bindChips(function(v,el){selectAdvance(v,el,'income','result');});document.getElementById('back').onclick=function(){state.screen='q_debt';route();};}
 function renderResult(){
@@ -357,7 +331,7 @@ function renderResult(){
   if(!state.analyzed){
     paint('<div class="analyzing"><div class="spin"></div><div style="font-weight:700;font-size:16px">회원님 채무 분석 중…</div><div style="font-size:13px;color:#86868b;margin-top:6px">감면 가능액을 계산하고 있어요</div></div>');
     funnelStep('step_result');
-    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},1300);
+    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},250);
     return;
   }
   var p=finalPct(state.answers.debt,state.answers.income),m=debtMid(state.answers.debt),cut=Math.round(m*p/100),left=m-cut;
@@ -367,24 +341,33 @@ function renderResult(){
     '<div class="ramt">최대 <span id="cnt">0</span><small>만원</small></div>'+
     '<div class="rpct"><span>예상 감면율 최대 '+p+'%</span></div>'+
     '<div class="rbd"><div class="row"><span>현재 채무(추정)</span><b>약 '+won(m)+'만원</b></div><div class="row cut"><span>예상 감면액</span><b>− '+won(cut)+'만원</b></div><div class="row"><span>조정 후 예상 원금</span><b>약 '+won(left)+'만원</b></div></div>'+
-    '<div class="rbig" style="margin-top:14px">내 빚, 진짜 이만큼 줄어들까?</div>'+
-    '<div class="qn" style="text-align:center;margin:4px 0 12px">번호만 남기면 변호사가 <b>오늘 안에</b> 직접 확인해 정확한 감면 가능액을 알려드려요.</div>'+
+    '<button class="rcta" id="go">이 결과 문자로 받기 →</button>'+
+    '<div class="rfine">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다. 정확한 감면액은 담당 변호사 상담 시 확정됩니다.</div>');
+  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/14));
+  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},25);
+  document.getElementById('back').onclick=function(){state.screen='q_income';route();};
+  document.getElementById('go').onclick=function(){state.screen='contact';route();};
+}
+function renderContact(){
+  setBar();
+  paint('<button class="back" id="back">← 결과 다시보기</button>'+
+    '<div class="recap"><span>예상 감면 최대 '+won(Math.round(debtMid(state.answers.debt)*finalPct(state.answers.debt,state.answers.income)/100))+'만원</span><small>결과 받기 1단계 남음</small></div>'+
+    '<div class="q" style="font-size:clamp(18px,5vw,22px)">예상 결과가 나왔어요!<br>정확한 감면액, 어디로 보내드릴까요?</div>'+
+    '<div class="qn">감면 예상액과 내게 맞는 해결 방법을 담당 변호사가 직접 정리해 드려요.</div>'+
     '<div id="err" class="err hidden"></div>'+
     '<div class="field"><label>이름</label><input id="name" type="text" placeholder="홍길동" autocomplete="name" value="'+esc(state.name)+'"></div>'+
-    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"><div class="assure">가족·직장 몰래 <b>1:1 비공개</b>로 진행돼요. 변호사가 직접 확인 후 연락드리며, 스팸·영업전화는 없습니다.</div></div>'+
+    '<div class="field"><label>연락처</label><input id="phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(state.phone)+'"><div class="assure">가족·직장에 알리지 않아요 · 담당 변호사 1명만 연락 · 영업 전화 없음 · <b>오늘 안에</b> 연락드려요</div></div>'+
     '<label class="agree"><input type="checkbox" id="agree"'+(state.agreed?' checked':'')+'><span>[필수] 개인정보 수집·이용에 동의합니다. <a id="pv">[자세히]</a></span></label>'+
     '<div id="privacy" class="privacy hidden"><b>개인정보 수집·이용 동의 (개인정보처리자: 법무법인 율평)</b><br>① 수집·이용 목적: 개인회생·개인파산·채무조정 법률상담 신청 접수 및 상담 연결, 상담 진행 안내<br>② 수집 항목: 성명, 휴대전화번호, 채무금액, 월평균 소득 정보<br>③ 보유·이용 기간: 상담 종료 후 6개월 이내 지체 없이 파기하며, 관계 법령에 따라 보존 의무가 있는 경우 해당 기간 동안 보관합니다.<br>④ 동의 거부 권리 및 불이익: 귀하는 개인정보 수집·이용 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 상담 신청 및 연결 서비스 이용이 제한될 수 있습니다.<br>개인정보처리자: 법무법인 율평(대표변호사 김용일) · 문의: 070-8098-8711 / zeronotecp@naver.com</div>'+
-    '<button class="subbtn" id="submit">지금 내 감면액 확인하기 →</button>'+
-    '<div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다. 정확한 감면액은 담당 변호사 상담 시 확정됩니다.</div>');
-  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/26));
-  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},28);
+    '<button class="subbtn" id="submit">내 감면 예상액 확인하기 →</button>'+
+    '<div class="finenote" style="color:#3a3a3c;font-weight:600">상담은 무료예요. 진행 여부는 결과를 보고 직접 정하세요.</div><div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다.</div>');
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   funnelStep('step3_contact');
   nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
-  ph.oninput=function(){var d=ph.value.replace(/\D/g,'').slice(0,11);var pp=d.length>7?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):d.length>3?d.slice(0,3)+'-'+d.slice(3):d;state.phone=pp;ph.value=pp;};
+  ph.oninput=function(){var d=ph.value.replace(/\D/g,'').slice(0,11);var p=d.length>7?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):d.length>3?d.slice(0,3)+'-'+d.slice(3):d;state.phone=p;ph.value=p;};
   ag.onchange=function(){state.agreed=ag.checked;if(ag.checked){var ael=ag.closest('.agree');if(ael)ael.classList.remove('warn');}};
   document.getElementById('pv').onclick=function(){document.getElementById('privacy').classList.toggle('hidden');};
-  document.getElementById('back').onclick=function(){state.screen='q_income';route();};
+  document.getElementById('back').onclick=function(){state.screen='result';route();};
   document.getElementById('submit').onclick=submit;
 }
 function showErr(m){var e=document.getElementById('err');if(e){e.textContent=m;e.classList.remove('hidden');}}
@@ -408,7 +391,7 @@ function renderDone(){
     '<div class="done-note">🔒 상담 내용은 비공개로 안전하게 관리됩니다.</div></div>');
   try{var f=document.getElementById('form');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
 }
-function route(){if(state.submitted)return renderDone();switch(state.screen){case 'q_debt':return renderDebtQ();case 'q_income':return renderIncomeQ();case 'result':return renderResult();case 'contact':return renderResult();default:return renderDebtQ();}}
+function route(){if(state.submitted)return renderDone();switch(state.screen){case 'q_debt':return renderDebtQ();case 'q_income':return renderIncomeQ();case 'result':return renderResult();case 'contact':return renderContact();default:return renderDebtQ();}}
 route();
 
 (function(){
