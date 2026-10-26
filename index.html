@@ -357,7 +357,7 @@ function renderResult(){
   if(!state.analyzed){
     paint('<div class="analyzing"><div class="spin"></div><div style="font-weight:700;font-size:16px">회원님 채무 분석 중…</div><div style="font-size:13px;color:#86868b;margin-top:6px">감면 가능액을 계산하고 있어요</div></div>');
     funnelStep('step_result');
-    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},1300);
+    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},500);
     return;
   }
   var p=finalPct(state.answers.debt,state.answers.income),m=debtMid(state.answers.debt),cut=Math.round(m*p/100),left=m-cut;
@@ -376,8 +376,8 @@ function renderResult(){
     '<div id="privacy" class="privacy hidden"><b>개인정보 수집·이용 동의 (개인정보처리자: 법무법인 율평)</b><br>① 수집·이용 목적: 개인회생·개인파산·채무조정 법률상담 신청 접수 및 상담 연결, 상담 진행 안내<br>② 수집 항목: 성명, 휴대전화번호, 채무금액, 월평균 소득 정보<br>③ 보유·이용 기간: 상담 종료 후 6개월 이내 지체 없이 파기하며, 관계 법령에 따라 보존 의무가 있는 경우 해당 기간 동안 보관합니다.<br>④ 동의 거부 권리 및 불이익: 귀하는 개인정보 수집·이용 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 상담 신청 및 연결 서비스 이용이 제한될 수 있습니다.<br>개인정보처리자: 법무법인 율평(대표변호사 김용일) · 문의: 070-8098-8711 / zeronotecp@naver.com</div>'+
     '<button class="subbtn" id="submit">지금 내 감면액 확인하기 →</button>'+
     '<div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다. 정확한 감면액은 담당 변호사 상담 시 확정됩니다.</div>');
-  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/26));
-  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},28);
+  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/18));
+  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},22);
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   funnelStep('step3_contact');
   nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
