@@ -81,6 +81,7 @@ section{padding:64px 20px}
 .hero .in{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
 .hero h1{color:#1d1d1f;font-size:clamp(30px,8.5vw,44px);line-height:1.18;font-weight:600;letter-spacing:-0.6px;word-break:keep-all}
 .hero p{color:#6e6e73;font-size:clamp(15px,4.2vw,17px);line-height:1.6;max-width:400px;word-break:keep-all}
+.hero .hsub{color:#333;font-weight:600;font-size:clamp(16px,4.4vw,19px);max-width:460px;line-height:1.5}
 .hbadge{display:inline-flex;align-items:center;gap:6px;background:#fdecec;color:#c62828;font-size:clamp(12.5px,3.4vw,14px);font-weight:700;padding:7px 15px;border-radius:999px;letter-spacing:-0.2px;word-break:keep-all;margin-bottom:-4px}
 .mbr{display:none}
 .stats{display:flex;gap:12px;justify-content:center;width:100%;max-width:420px}
@@ -251,13 +252,12 @@ footer a{color:#0066cc}
       'check':'채무조정 대상인지<br>30초 확인'
     };var m=location.search.match(/[?&]h=([a-z0-9_-]+)/i);var k=m?m[1].toLowerCase():'';window.LP_H=H[k]?k:'default';if(H[k]){document.getElementById('hero-h1').innerHTML=H[k];}})();
     </script>
-    <p>복잡한 서류 없이 3가지 질문이면 끝.<br>30초 무료 진단.</p>
-    <div class="lawyer-note" style="margin:0 0 14px;font-size:14px;line-height:1.5;opacity:.95">변호사가 무료 진단<br>변호사가 직접 검토해요<br>회생·파산·채무조정 비교</div>
+    <p class="hsub">개인회생·파산·채무조정 중<br>내 상황에 맞는 절차를<br>법무법인 율평에서 상담해 드립니다.</p>
+    <a href="#form" class="cta">무료 상담 신청하기</a>
     <div class="stats">
       <div class="c"><div class="k">원금 감면</div><div class="v red">최대 97%</div></div>
       <div class="c"><div class="k">이자</div><div class="v blue">전액 면제</div></div>
     </div>
-    <a href="#form" class="cta">내 조정 가능액 30초 진단</a>
     <div class="trust">🔒가족·직장 몰래 · 변호사 직접 확인 · 변호사 비공개 상담</div>
     <div class="disc">*개인 상황·제도에 따라 다름 · 광고책임변호사 김용일 (법무법인 율평)</div>
   </div>
@@ -349,7 +349,7 @@ function bindChips(cb){Array.prototype.forEach.call(body.querySelectorAll('.chip
   }
   b.addEventListener('click',fire);
 });}
-function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;funnelStep(key==='debt'?'step1_debt':'step2_income');setTimeout(function(){state.screen=next;route();},80);}
+function selectAdvance(v,el,key,next){el.classList.add('sel');state.answers[key]=v;funnelStep(key==='debt'?'step1_debt':'step2_income');setTimeout(function(){state.screen=next;route();},120);}
 function renderDebtQ(){setBar();paint('<div class="step-no">STEP 1 / 2</div><div class="q">현재 부담 중인<br>채무금액은?</div><div class="qn">해당하는 금액을 선택해주세요.</div>'+chips(DEBT));bindChips(function(v,el){selectAdvance(v,el,'debt','q_income');});}
 function renderIncomeQ(){setBar();paint('<button class="back" id="back">← 이전</button><div class="step-no">STEP 2 / 2</div><div class="q">월평균 급여는<br>어느 정도인가요?</div><div class="qn">소득이 낮을수록 감면 가능성이 커집니다.</div>'+chips(INCOME));bindChips(function(v,el){selectAdvance(v,el,'income','result');});document.getElementById('back').onclick=function(){state.screen='q_debt';route();};}
 function renderResult(){
@@ -357,7 +357,7 @@ function renderResult(){
   if(!state.analyzed){
     paint('<div class="analyzing"><div class="spin"></div><div style="font-weight:700;font-size:16px">회원님 채무 분석 중…</div><div style="font-size:13px;color:#86868b;margin-top:6px">감면 가능액을 계산하고 있어요</div></div>');
     funnelStep('step_result');
-    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},250);
+    setTimeout(function(){state.analyzed=true;if(state.screen==='result')renderResult();},1300);
     return;
   }
   var p=finalPct(state.answers.debt,state.answers.income),m=debtMid(state.answers.debt),cut=Math.round(m*p/100),left=m-cut;
@@ -376,8 +376,8 @@ function renderResult(){
     '<div id="privacy" class="privacy hidden"><b>개인정보 수집·이용 동의 (개인정보처리자: 법무법인 율평)</b><br>① 수집·이용 목적: 개인회생·개인파산·채무조정 법률상담 신청 접수 및 상담 연결, 상담 진행 안내<br>② 수집 항목: 성명, 휴대전화번호, 채무금액, 월평균 소득 정보<br>③ 보유·이용 기간: 상담 종료 후 6개월 이내 지체 없이 파기하며, 관계 법령에 따라 보존 의무가 있는 경우 해당 기간 동안 보관합니다.<br>④ 동의 거부 권리 및 불이익: 귀하는 개인정보 수집·이용 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 상담 신청 및 연결 서비스 이용이 제한될 수 있습니다.<br>개인정보처리자: 법무법인 율평(대표변호사 김용일) · 문의: 070-8098-8711 / zeronotecp@naver.com</div>'+
     '<button class="subbtn" id="submit">지금 내 감면액 확인하기 →</button>'+
     '<div class="finenote">※ 예상 수치이며 실제 감면율은 개인 채무·소득 상황에 따라 달라집니다. 정확한 감면액은 담당 변호사 상담 시 확정됩니다.</div>');
-  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/14));
-  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},25);
+  var el=document.getElementById('cnt'),t=0,stp=Math.max(1,Math.round(cut/26));
+  var iv=setInterval(function(){t+=stp;if(t>=cut){t=cut;clearInterval(iv);}if(el)el.textContent=won(t);},28);
   var nm=document.getElementById('name'),ph=document.getElementById('phone'),ag=document.getElementById('agree');
   funnelStep('step3_contact');
   nm.oninput=function(){state.name=nm.value;funnelStep('step3_typing');};
