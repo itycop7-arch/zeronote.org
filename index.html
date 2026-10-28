@@ -81,7 +81,7 @@ section{padding:64px 20px}
 .hero .in{max-width:680px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:20px}
 .hero h1{color:#1d1d1f;font-size:clamp(30px,8.5vw,44px);line-height:1.18;font-weight:600;letter-spacing:-0.6px;word-break:keep-all}
 .hero p{color:#6e6e73;font-size:clamp(15px,4.2vw,17px);line-height:1.6;max-width:400px;word-break:keep-all}
-.hero .hsub{color:#333;font-weight:600;font-size:clamp(16px,4.4vw,19px);max-width:460px;line-height:1.5}
+.hero .hsub{color:#444;font-weight:500;font-size:clamp(16px,4.4vw,19px);max-width:460px;line-height:1.5}
 .hbadge{display:inline-flex;align-items:center;gap:6px;background:#fdecec;color:#c62828;font-size:clamp(12.5px,3.4vw,14px);font-weight:700;padding:7px 15px;border-radius:999px;letter-spacing:-0.2px;word-break:keep-all;margin-bottom:-4px}
 .mbr{display:none}
 .stats{display:flex;gap:12px;justify-content:center;width:100%;max-width:420px}
@@ -238,7 +238,7 @@ footer a{color:#0066cc}
 
 <section class="hero">
   <div class="in">
-    <div class="hbadge">💳 카드값·대출 있으면 누구나 무료 대상</div>
+    <div class="hbadge">💳 카드·대출 빚, 혼자 고민 마세요</div>
     <h1 id="hero-h1">내 빚, 얼마나<br>줄일 수 있을까?</h1>
     <script>
     /* 메시지 매치: 광고 소재 문구 = H1. ?h=키 — 화이트리스트만 허용(URL 텍스트 직접 삽입 없음). 키 없으면 기본 H1 */
@@ -262,6 +262,78 @@ footer a{color:#0066cc}
     <div class="disc">*개인 상황·제도에 따라 다름 · 광고책임변호사 김용일 (법무법인 율평)</div>
   </div>
 </section>
+
+<style>
+.chk{padding:40px 20px;background:#f2f6fc}
+.chk .inner{max-width:680px;margin:0 auto}
+.ck-badge{display:inline-block;background:#dbe7fb;color:#2b6fe0;font-weight:800;font-size:12px;letter-spacing:1px;padding:7px 14px;border-radius:999px}
+.chk h2{font-size:clamp(22px,6vw,30px);font-weight:800;line-height:1.3;letter-spacing:-0.5px;color:#1d2330;margin:14px 0 20px;word-break:keep-all}
+.chk h2 .hl{color:#2b6fe0}
+.ck-box{background:#fff;border-radius:18px;box-shadow:0 4px 20px rgba(30,50,90,.06);overflow:hidden}
+.ck-row{display:flex;align-items:center;gap:14px;padding:18px;border-bottom:1px solid #f0f2f6;cursor:pointer;transition:background .12s;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.ck-row:hover{background:#fafbfe}
+.cb{flex:0 0 auto;width:24px;height:24px;border:2px solid #cfd8e6;border-radius:8px;position:relative;transition:.12s}
+.ck-row.on .cb{background:#2b6fe0;border-color:#2b6fe0}
+.ck-row.on .cb:after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.ck-row .lb{flex:1;font-size:clamp(15px,4.1vw,17px);font-weight:600;color:#2a2f3a;word-break:keep-all}
+.ck-row .tag{flex:0 0 auto;background:#8a93a3;color:#fff;font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;white-space:nowrap}
+.ck-row.on .tag{background:#2b6fe0}
+.ck-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px}
+.ck-cnt{font-size:clamp(14px,3.8vw,15px);color:#5b6675}
+.ck-cnt b{color:#2b6fe0;font-weight:800}
+.ck-go{flex:0 0 auto;background:#2b6fe0;color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:12px 22px;border-radius:12px}
+.ck-go:active{transform:scale(.97)}
+.ck-res{max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .3s ease,margin-top .3s}
+.ck-res.show{max-height:320px;opacity:1;margin-top:14px}
+.ck-res-in{background:#fff;border:1.5px solid #2b6fe0;border-radius:16px;padding:18px;text-align:center}
+.ck-res-in .big{font-size:clamp(17px,4.6vw,20px);font-weight:800;color:#1d2330}
+.ck-res-in .big b{color:#2b6fe0}
+.ck-res-in .amt{margin-top:6px;font-size:clamp(14px,3.8vw,15px);color:#5b6675;font-weight:600}
+.ck-res-in .amt b{color:#2b6fe0}
+.ck-fine{font-size:11.5px;color:#9aa5b3;line-height:1.5;margin-top:8px;text-align:center;word-break:keep-all}
+#ckHint.hide{display:none}
+</style>
+<section class="chk" id="chk">
+  <div class="inner" data-reveal>
+    <div class="ck-badge">CHECK</div>
+    <h2>이 중 하나라도 해당되면<br><span class="hl">지금 진단 대상</span>입니다</h2>
+    <div class="ck-box">
+      <div class="ck-row"><span class="cb"></span><span class="lb">빚이 3,000만원을 넘었다</span><span class="tag">진단 대상</span></div>
+      <div class="ck-row"><span class="cb"></span><span class="lb">월급·사업소득이 꾸준히 있다</span><span class="tag">진단 대상</span></div>
+      <div class="ck-row"><span class="cb"></span><span class="lb">카드 돌려막기로 버티고 있다</span><span class="tag">진단 대상</span></div>
+      <div class="ck-row"><span class="cb"></span><span class="lb">독촉 전화·문자가 계속 온다</span><span class="tag">진단 대상</span></div>
+      <div class="ck-row"><span class="cb"></span><span class="lb">예전에 신용회복을 받은 적 있다</span><span class="tag">진단 대상</span></div>
+      <div class="ck-foot">
+        <span class="ck-cnt"><b id="ckCount">0</b>개 해당 <span id="ckHint">· 항목을 눌러보세요</span></span>
+        <a href="#form" class="ck-go">진단하기</a>
+      </div>
+    </div>
+    <div class="ck-res" id="ckRes">
+      <div class="ck-res-in">
+        <div class="big">예상 원금 감면 <b>최대 <span id="ckPct">0</span>%</b></div>
+        <div class="amt">채무 3,000만원 기준 예시 · 최대 약 <b id="ckAmt">0</b>만원</div>
+      </div>
+      <div class="ck-fine">※ 예상 수치이며, 정확한 감면 가능액은 개인 채무·소득·재산 상황에 따라 다르고 상담에서 확인됩니다.</div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var sec=document.getElementById('chk'); if(!sec) return;
+  var rows=Array.prototype.slice.call(sec.querySelectorAll('.ck-row'));
+  var cntEl=document.getElementById('ckCount'),res=document.getElementById('ckRes'),amtEl=document.getElementById('ckAmt'),pctEl=document.getElementById('ckPct'),hint=document.getElementById('ckHint');
+  var PCT=[0,72,78,84,90,95],BASE=3000;
+  function won(n){return Number(n).toLocaleString('ko-KR');}
+  function upd(){
+    var c=0;rows.forEach(function(r){if(r.classList.contains('on'))c++;});
+    cntEl.textContent=c;
+    if(c>=1){var p=PCT[c];pctEl.textContent=p;amtEl.textContent=won(Math.round(BASE*p/100));res.classList.add('show');if(hint)hint.classList.add('hide');}
+    else{res.classList.remove('show');if(hint)hint.classList.remove('hide');}
+  }
+  rows.forEach(function(r){r.addEventListener('click',function(){r.classList.toggle('on');upd();});});
+  upd();
+})();
+</script>
 
 <section class="ba-sec" id="baSec">
   <div class="inner" data-reveal>
@@ -323,7 +395,7 @@ function sendEntry(entry){
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
 setTimeout(retryPending,2000);
 
-var DEBT=[{v:'500만원 미만',p:60,mid:300},{v:'500~1천만원',p:68,mid:750},{v:'1천~3천만원',p:75,mid:2000},{v:'3천~5천만원',p:83,mid:4000},{v:'5천만원~1억원',p:90,mid:7500},{v:'1억원 이상',p:96,mid:13000}];
+var DEBT=[{v:'500~1천만원',p:68,mid:750},{v:'1천~3천만원',p:75,mid:2000},{v:'3천~5천만원',p:83,mid:4000},{v:'5천만원~1억원',p:90,mid:7500},{v:'1억원 이상',p:96,mid:13000}];
 var INCOME=[{v:'150만원 미만',a:2},{v:'150~300만원',a:0},{v:'300~500만원',a:-3},{v:'500만원 이상',a:-6}];
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 function debtPct(v){var f=DEBT.filter(function(d){return d.v===v;})[0];return f?f.p:80;}
