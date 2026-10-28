@@ -329,7 +329,7 @@ footer a{color:#0066cc}
     cntEl.textContent=c;
     if(c>=1){var p=PCT[c];pctEl.textContent=p;amtEl.textContent=won(Math.round(BASE*p/100));res.classList.add('show');if(hint)hint.classList.add('hide');}
     else{res.classList.remove('show');if(hint)hint.classList.remove('hide');}
-    if(c>prev&&c>=1){setTimeout(function(){try{res.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){res.scrollIntoView();}},220);}
+    if(prev===0&&c===1){setTimeout(function(){try{sec.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){sec.scrollIntoView();}},400);}
     prev=c;
   }
   rows.forEach(function(r){r.addEventListener('click',function(){r.classList.toggle('on');upd();});});
