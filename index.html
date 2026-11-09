@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1166377709062515');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1166377709062515&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>무료 채무진단 | 법무법인 율평</title>
@@ -46,6 +62,7 @@ function kakaoLead(){
 }
 /* 틱톡 전환: 제출 시 표준 이벤트 SubmitForm 1회 (퍼널 이벤트 없음) */
 function tiktokLead(){try{if(window.ttq&&typeof ttq.track==='function')ttq.track('SubmitForm',{content_name:'채무진단 신청'});}catch(e){}}
+function metaLead(){try{if(window.fbq)fbq('track','Lead',{content_name:'채무진단 신청'});}catch(e){}}
 /* 토스 전환(lead): 제출 즉시 발화 — 시트 응답을 기다리지 않음(웹뷰 조기 이탈 대비). SDK 미로드 시 최대 3초 재시도 */
 function tossLead(){
   var tries=0;(function fire(){try{if(window.TossPixel){var inst=window.TossPixel(TOSS_PIXEL_ID);if(inst&&typeof inst.lead==='function'){inst.lead({event_id:'LEAD-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),lead_type:'Consultation',custom_param1:'debt',custom_param2:'landing_form',custom_param3:'h_'+(window.LP_H||'default')});return;}}}catch(e){return;}if(++tries<12)setTimeout(fire,250);})();
@@ -472,7 +489,7 @@ function submit(){
   if(!state.agreed){var ael=document.querySelector('.agree');if(ael){ael.classList.remove('warn');void ael.offsetWidth;ael.classList.add('warn');ael.scrollIntoView({behavior:'smooth',block:'center'});}return showErr('개인정보 수집 및 이용에 동의해주세요.');}
   var entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),'접수일시':new Date().toLocaleString('ko-KR'),'이름':state.name.trim(),'연락처':state.phone,'채무금액':state.answers.debt||'','월평균급여':state.answers.income||'','유입경로':TRAFFIC_SRC};
   queuePush('zeronote_backup',entry,200);queuePush('zeronote_pending',entry,50);sendEntry(entry);
-  state.submitted=true;kakaoLead();tossLead();tiktokLead();renderDone();
+  state.submitted=true;kakaoLead();tossLead();tiktokLead();metaLead();renderDone();
 }
 function renderDone(){
   bar.style.width='100%';
