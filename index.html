@@ -79,6 +79,13 @@ function funnelStep(tag){
   if(tag==='step3_contact'){                    // 보조 전환: STEP3 도달만 구분 발동
     kx('addToCart',{tag:'contact_'+TRAFFIC_SRC});
   }
+  metaStep(tag);
+}
+/* 메타 퍼널 이벤트(세션당 1회, funnelStep에서 호출): 단계별 이탈 파악·보조 최적화용
+   step1_debt → DiagnosisStep1, step2_income → DiagnosisStep2, step3_contact → DiagnosisStep3 */
+function metaStep(tag){
+  try{if(!window.fbq)return;var m={step1_debt:'DiagnosisStep1',step2_income:'DiagnosisStep2',step3_contact:'DiagnosisStep3'};
+    if(m[tag])fbq('trackCustom',m[tag],{source:TRAFFIC_SRC});}catch(e){}
 }
 </script>
 <script>
