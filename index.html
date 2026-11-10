@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+<link rel="preconnect" href="https://static.toss.im" crossorigin>
+<link rel="preconnect" href="https://t1.daumcdn.net" crossorigin>
+<link rel="preconnect" href="https://analytics.tiktok.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.facebook.com">
+<link rel="dns-prefetch" href="https://hrzppmqzhdyeybwqysua.supabase.co">
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -79,13 +85,6 @@ function funnelStep(tag){
   if(tag==='step3_contact'){                    // 보조 전환: STEP3 도달만 구분 발동
     kx('addToCart',{tag:'contact_'+TRAFFIC_SRC});
   }
-  metaStep(tag);
-}
-/* 메타 퍼널 이벤트(세션당 1회, funnelStep에서 호출): 단계별 이탈 파악·보조 최적화용
-   step1_debt → DiagnosisStep1, step2_income → DiagnosisStep2, step3_contact → DiagnosisStep3 */
-function metaStep(tag){
-  try{if(!window.fbq)return;var m={step1_debt:'DiagnosisStep1',step2_income:'DiagnosisStep2',step3_contact:'DiagnosisStep3'};
-    if(m[tag])fbq('trackCustom',m[tag],{source:TRAFFIC_SRC});}catch(e){}
 }
 </script>
 <script>
@@ -421,7 +420,7 @@ function sendEntry(entry){
 function retryPending(){try{JSON.parse(localStorage.getItem('zeronote_pending')||'[]').forEach(function(e){sendEntry(e);});}catch(x){}}
 setTimeout(retryPending,2000);
 
-var DEBT=[{v:'1,500~3,000만원',p:74,mid:2250},{v:'3,000~5,000만원',p:82,mid:4000},{v:'5,000만원 이상',p:90,mid:7000}];
+var DEBT=[{v:'1,500~3,000만원',p:74,mid:2250},{v:'3,000~5,000만원',p:82,mid:4000},{v:'5,000만원~1억원',p:90,mid:7500},{v:'1억원 이상',p:96,mid:13000}];
 var INCOME=[{v:'150만원 미만',a:2},{v:'150~300만원',a:0},{v:'300~500만원',a:-3},{v:'500만원 이상',a:-6}];
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 function debtPct(v){var f=DEBT.filter(function(d){return d.v===v;})[0];return f?f.p:80;}
